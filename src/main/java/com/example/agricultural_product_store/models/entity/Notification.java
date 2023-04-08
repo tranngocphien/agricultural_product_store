@@ -1,0 +1,28 @@
+package com.example.agricultural_product_store.models.entity;
+
+import lombok.Data;
+
+import javax.persistence.*;
+
+@Entity(name = "notification")
+@Data
+public class Notification extends BaseEntity{
+    @Id
+    private Long id;
+
+    @Column(name = "content")
+    private String content;
+
+    @OneToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order;
+
+    @OneToOne
+    @JoinColumn(name = "purchase_order_id", referencedColumnName = "id")
+    private PurchaseOrder purchaseOrder;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+}

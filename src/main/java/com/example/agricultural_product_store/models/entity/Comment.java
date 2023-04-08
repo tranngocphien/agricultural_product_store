@@ -17,8 +17,12 @@ public class Comment extends BaseEntity {
     @Column(name = "rate")
     private int rate;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
     @OneToOne
-    @JoinColumn(name = "product_line_id", referencedColumnName = "id")
-    private ProductLine productLine;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User owner;
 
 }

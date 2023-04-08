@@ -10,8 +10,8 @@ public class PurchaseOrder extends BaseEntity{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_line_id", nullable = false)
-    private ProductLine productLine;
+    @JoinColumn(name = "supplier_product_id", nullable = false)
+    private SupplierProduct supplierProduct;
 
     @Column(name = "amount")
     private int amount;

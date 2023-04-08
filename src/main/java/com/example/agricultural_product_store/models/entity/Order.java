@@ -23,6 +23,9 @@ public class Order {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "payment_type")
+    private String paymentType;
+
     @OneToMany(mappedBy = "orderInfo")
     private Set<OrderItem> items;
 

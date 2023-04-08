@@ -3,11 +3,15 @@ package com.example.agricultural_product_store.controllers;
 import com.example.agricultural_product_store.config.security.JwtUtil;
 import com.example.agricultural_product_store.dto.request.LoginRequest;
 import com.example.agricultural_product_store.dto.request.RegisterRequest;
+import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.dto.response.JwtResponse;
+import com.example.agricultural_product_store.models.entity.ERole;
 import com.example.agricultural_product_store.models.entity.Role;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.RoleRepository;
 import com.example.agricultural_product_store.repositories.UserRepository;
+import com.example.agricultural_product_store.services.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,12 +43,15 @@ public class AuthController {
 
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    private final AccountService accountService;
+
+    public AuthController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AccountService accountService) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountService = accountService;
     }
 
     @PostMapping("/login")
@@ -60,27 +70,35 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseData<String> register(@Valid @RequestBody RegisterRequest registerRequest) {
         if(userRepository.existsByUsername(registerRequest.getUsername())){
-            return  ResponseEntity.badRequest().body("Username is already taken");
+            return ResponseData.onFail(HttpStatus.BAD_REQUEST.value(), "Username is already taken");
         }
 
-        Role role = roleRepository.findByName("ROLE_USER");
-//        User user = new User(1L,registerRequest.getUsername(),passwordEncoder.encode(registerRequest.getPassword()),registerRequest.getEmail(), Collections.singleton(role) );
-//        userRepository.save(user);
+        Role role = roleRepository.findByName(ERole.ROLE_USER);
+        Set<Role> roles = new HashSet<Role>();
+        roles.add(role);
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setEmail(registerRequest.getEmail());
+        user.setRoles(roles);
+        user.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
+        user.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
+        userRepository.save(user);
 
-        return ResponseEntity.ok("");
+        return ResponseData.onSuccess("SUCCESS");
     }
 
 
 
     @GetMapping("/hello")
-    public String hello() {
-        return "hello";
+    public ResponseEntity hello() {
+        return ResponseEntity.ok(accountService.list());
     }
 
     @GetMapping("/hello2")
-    public String hello2() {
-        return "hello";
+    public ResponseData<String> hello2() {
+        return ResponseData.onFail(404, "FAIL");
     }
 }

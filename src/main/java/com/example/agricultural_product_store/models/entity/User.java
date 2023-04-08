@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -54,6 +54,12 @@ public class User extends BaseEntity {
 
     @Column(name = "dob")
     private Date dob;
+
+    @ManyToMany
+    @JoinTable(	name = "user_favourite",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> favourite = new HashSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time", nullable = false, updatable = false)
