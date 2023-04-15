@@ -29,4 +29,8 @@ public class ResponseData<T> {
     public static <T> ResponseData<T> onFail(int code, String message) {
         return new ResponseData<>(code, message);
     }
+
+    public static <T> ResponseData<T> onFail() {
+        return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "FAIL");
+    }
 }

@@ -15,6 +15,9 @@ public class SupplierProduct extends BaseEntity{
     @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "expected_price")
+    private int expectedPrice;
+
     @Column(name = "location")
     private String location;
 
@@ -24,19 +27,15 @@ public class SupplierProduct extends BaseEntity{
     @Column(name = "certificate_type")
     private String certificateType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "certificate_image",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private Set<Image> certificateImages;
+    @ElementCollection
+    @CollectionTable(name = "certificate_image", joinColumns = @JoinColumn(name = "supplier_product_id"))
+    @Column(name = "image")
+    private Set<String> certificateImages;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "supplier_product_image",
-            joinColumns = @JoinColumn(name = "supplier_product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private Set<Image> images;
+    @ElementCollection
+    @CollectionTable(name = "supplier_product_image", joinColumns = @JoinColumn(name = "supplier_product_id"))
+    @Column(name = "image")
+    private Set<String> images;
 
     @Column(name = "preservation")
     private String preservation;

@@ -1,5 +1,6 @@
 package com.example.agricultural_product_store.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,17 +14,21 @@ public class Product extends BaseEntity{
     @Column(name = "product_id")
     private Long id;
 
+    @Column(name = "product_name")
+    private String name;
+
     @Column(name = "price")
     private int price;
 
     @Column(name = "sku")
-    private int sku;
+    private String sku;
 
     @Column(name = "stock")
     private int stock;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
     private Category category;
 
     @Column(name = "location")
@@ -35,19 +40,15 @@ public class Product extends BaseEntity{
     @Column(name = "certificate_type")
     private String certificateType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "certificate_image",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private Set<Image> certificateImages;
+    @ElementCollection
+    @CollectionTable(name = "certificate_image", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image")
+    private Set<String> certificateImages;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "product_image",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private Set<Image> images;
+    @ElementCollection
+    @CollectionTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image")
+    private Set<String> images;
 
     @Column(name = "preservation")
     private String preservation;
@@ -55,4 +56,7 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy = "product")
     private Set<Comment> comments;
 
+    @ManyToOne
+    @JoinColumn(name = "supplier_id", nullable = false)
+    private Supplier supplier;
 }

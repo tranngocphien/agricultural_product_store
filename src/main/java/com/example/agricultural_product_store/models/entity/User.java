@@ -43,9 +43,6 @@ public class User extends BaseEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "id_number")
-    private String idNumber;
-
     @Column(name = "location")
     private String location;
 

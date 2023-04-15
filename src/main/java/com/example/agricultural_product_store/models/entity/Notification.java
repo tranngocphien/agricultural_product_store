@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Data
 public class Notification extends BaseEntity{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "content")

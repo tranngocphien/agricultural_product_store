@@ -2,15 +2,14 @@ package com.example.agricultural_product_store.models.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name = "category")
 @Data
 public class Category extends BaseEntity {
     @Id
-    @Column(name = "category_id")
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "category_name")
