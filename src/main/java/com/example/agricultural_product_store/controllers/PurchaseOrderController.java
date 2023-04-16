@@ -4,12 +4,8 @@ import com.example.agricultural_product_store.dto.request.CreatePurchaseOrderReq
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.PurchaseOrder;
 import com.example.agricultural_product_store.services.PurchaseOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/purchase-orders")
@@ -23,6 +19,12 @@ public class PurchaseOrderController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseData<PurchaseOrder> create(@RequestBody CreatePurchaseOrderRequest request) {
-        return ResponseData.onFail();
+        return ResponseData.onSuccess(purchaseOrderService.create(request));
+    }
+
+    @PostMapping("/confirm/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    public ResponseData<PurchaseOrder> confirm( @PathVariable Long id) {
+        return ResponseData.onSuccess(purchaseOrderService.confirmPurchaseOrder(id));
     }
 }

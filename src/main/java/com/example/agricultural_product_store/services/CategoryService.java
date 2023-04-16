@@ -1,6 +1,8 @@
 package com.example.agricultural_product_store.services;
 
+import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CreateCategoryRequest;
+import com.example.agricultural_product_store.dto.request.UpdateCategoryRequest;
 import com.example.agricultural_product_store.models.entity.Category;
 import com.example.agricultural_product_store.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,20 @@ public class CategoryService extends BaseService<Category, Long>{
         category.setCreateTime(new Timestamp(System.currentTimeMillis()));
         category.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         return  repository.save(category);
+    }
+
+    public Category update(UpdateCategoryRequest request) {
+        Category category = repository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        category.setCategoryName(request.getCategoryName());
+        category.setCategoryThumb(request.getCategoryThumb());
+        category.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        return  repository.save(category);
+    }
+
+    public Category delete(Long id) {
+        Category category = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        repository.delete(category);
+        return category;
     }
     
 }

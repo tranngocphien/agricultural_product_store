@@ -1,18 +1,17 @@
 package com.example.agricultural_product_store.services;
 
+import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CreateSupplierProductRequest;
 import com.example.agricultural_product_store.models.entity.Category;
 import com.example.agricultural_product_store.models.entity.SupplierProduct;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.CategoryRepository;
 import com.example.agricultural_product_store.repositories.SupplierProductRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 
 @Service
 public class SupplierProductService extends BaseService<SupplierProduct, Long> {
@@ -27,7 +26,7 @@ public class SupplierProductService extends BaseService<SupplierProduct, Long> {
 
     public SupplierProduct create(CreateSupplierProductRequest request, User owner) {
         Category category = categoryRepository.findById(request.getCategoryID()).orElseThrow(
-                () -> new RuntimeException("Category not found"));
+                () -> new ResourceNotFoundException("Category not found"));
         SupplierProduct supplierProduct = new SupplierProduct();
         supplierProduct.setOwner(owner);
         supplierProduct.setProductName(request.getName());

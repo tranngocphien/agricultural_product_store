@@ -1,5 +1,6 @@
 package com.example.agricultural_product_store.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.Set;
 
 @Entity(name = "order_info")
 @Data
-public class Order {
+public class Order extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +24,19 @@ public class Order {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "payment_type")
-    private String paymentType;
+    @ManyToOne
+    @JoinColumn(name = "payment_type_id", nullable = false)
+    @JsonIgnore
+    private PaymentType paymentType;
 
     @OneToMany(mappedBy = "orderInfo")
     private Set<OrderItem> items;
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User owner;
 
 }

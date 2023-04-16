@@ -1,9 +1,12 @@
 package com.example.agricultural_product_store.models.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity(name = "purchase_order")
+@Data
 public class PurchaseOrder extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,8 @@ public class PurchaseOrder extends BaseEntity{
     @Column(name = "harvest_at")
     private Date harvestAt;
 
+    @Column(name = "note")
+    private String note;
 
 }
 

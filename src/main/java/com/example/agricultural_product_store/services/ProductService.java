@@ -1,5 +1,6 @@
 package com.example.agricultural_product_store.services;
 
+import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CreateProductRequest;
 import com.example.agricultural_product_store.models.entity.Category;
 import com.example.agricultural_product_store.models.entity.Product;
@@ -13,8 +14,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ProductService extends BaseService<Product, Long>{
@@ -36,14 +35,17 @@ public class ProductService extends BaseService<Product, Long>{
     }
 
     public Product createProduct(CreateProductRequest request) {
-        Optional<Category> category = categoryRepository.findById(request.getCategoryID());
-        Optional<Supplier> supplier = supplierRepository.findById(request.getSupplierId());
-        Supplier admin = supplierRepository.findById(1L).get();
+        Category category = categoryRepository.findById(request.getCategoryID()).orElseThrow(
+                () -> new ResourceNotFoundException("Category not found")
+        );
+        Supplier supplier = supplierRepository.findById(request.getSupplierId()).orElseThrow(
+                () -> new ResourceNotFoundException("Supplier not found")
+        );
         Product product = new Product();
         product.setName(request.getName());
         product.setPrice(request.getPrice());
         product.setSku(request.getSku());
-        product.setCategory(category.get());
+        product.setCategory(category);
         product.setImages(new HashSet<>(request.getImages()));
         product.setCertificateImages(new HashSet<>(request.getCertificateImages()));
         product.setDescription(request.getDescription());
@@ -51,7 +53,7 @@ public class ProductService extends BaseService<Product, Long>{
         product.setStock(request.getStock());
         product.setLocation(request.getOriginalLocation());
         product.setCertificateType(request.getCertificateType());
-        product.setSupplier(supplier.orElse(admin));
+        product.setSupplier(supplier);
         product.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
         product.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         return productRepository.save(product);

@@ -90,15 +90,4 @@ public class AuthController {
         return ResponseData.onSuccess("SUCCESS");
     }
 
-
-
-    @GetMapping("/hello")
-    public ResponseEntity hello() {
-        return ResponseEntity.ok(accountService.list());
-    }
-
-    @GetMapping("/hello2")
-    public ResponseData<String> hello2() {
-        return ResponseData.onFail(404, "FAIL");
-    }
 }

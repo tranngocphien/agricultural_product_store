@@ -1,0 +1,28 @@
+package com.example.agricultural_product_store.controllers;
+
+import com.example.agricultural_product_store.dto.response.ResponseData;
+import com.example.agricultural_product_store.models.entity.PaymentType;
+import com.example.agricultural_product_store.services.PaymentTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/payment-types")
+public class PaymentTypeController {
+    private final PaymentTypeService paymentTypeService;
+
+    public PaymentTypeController(PaymentTypeService paymentTypeService) {
+        this.paymentTypeService = paymentTypeService;
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SUPPLIER')")
+    public ResponseData<List<PaymentType>> getPaymentTypes() {
+        return ResponseData.onSuccess(paymentTypeService.list());
+    }
+}
