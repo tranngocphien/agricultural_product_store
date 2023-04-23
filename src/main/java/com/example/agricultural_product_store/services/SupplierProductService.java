@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class SupplierProductService extends BaseService<SupplierProduct, Long> {
@@ -41,5 +42,7 @@ public class SupplierProductService extends BaseService<SupplierProduct, Long> {
         supplierProduct.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         return repository.save(supplierProduct);
     }
-
+    public List<SupplierProduct> getSupplierProductOfUser(User user) {
+        return supplierProductRepository.findAllByOwner(user);
+    }
 }

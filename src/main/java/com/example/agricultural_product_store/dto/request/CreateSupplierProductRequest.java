@@ -20,5 +20,4 @@ public class CreateSupplierProductRequest {
     private List<String> certificateImages;
     private List<String> images;
     private String preservation;
-    private Long supplierId;
 }

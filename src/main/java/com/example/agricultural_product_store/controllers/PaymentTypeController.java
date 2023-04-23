@@ -21,7 +21,6 @@ public class PaymentTypeController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SUPPLIER')")
     public ResponseData<List<PaymentType>> getPaymentTypes() {
         return ResponseData.onSuccess(paymentTypeService.list());
     }

@@ -2,12 +2,15 @@ package com.example.agricultural_product_store.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity(name = "order_info")
-@Data
+@Getter
+@Setter
 public class Order extends BaseEntity{
 
     @Id
@@ -22,14 +25,16 @@ public class Order extends BaseEntity{
     private String shippingAddress;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @ManyToOne
     @JoinColumn(name = "payment_type_id", nullable = false)
     @JsonIgnore
     private PaymentType paymentType;
 
-    @OneToMany(mappedBy = "orderInfo")
+    @OneToMany(mappedBy = "orderInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<OrderItem> items;
 
     @Column(name = "phone_number")

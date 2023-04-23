@@ -9,8 +9,11 @@ import com.example.agricultural_product_store.repositories.PaymentTypeRepository
 import com.example.agricultural_product_store.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +31,7 @@ public class OrderService extends BaseService<Order, Long> {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public Order createOrder(CreateOrderRequest request, User user) {
         PaymentType paymentType = paymentTypeRepository.findById(request.getPaymentTypeId()).orElseThrow(
                 () -> new ResourceNotFoundException("Payment type not found")
@@ -38,8 +42,10 @@ public class OrderService extends BaseService<Order, Long> {
         order.setShippingFee(request.getShippingFee());
         order.setShippingAddress(request.getShippingAddress());
         order.setPhoneNumber(request.getPhoneNumber());
-        order.setStatus("ORDERED");
+        order.setStatus(OrderStatus.CONFIRMED);
         order.setOwner(user);
+        order.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        order.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         List<OrderItem> orderItemList = request.getItems().stream().map(item -> {
             Product product = productRepository.findById(item.getProductId()).orElseThrow(
                     () -> new ResourceNotFoundException("Product not found")
@@ -49,12 +55,28 @@ public class OrderService extends BaseService<Order, Long> {
             orderItem.setProduct(product);
             orderItem.setCreateTime(new Timestamp(System.currentTimeMillis()));
             orderItem.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-            return orderItemRepository.save(orderItem);
+            return orderItem;
         }).collect(Collectors.toList());
-        order.setItems(new java.util.HashSet<>(orderItemList));
-        order.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        order.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        order.setItems(new HashSet<>(orderItemList));
+        orderItemList.forEach(orderItem -> orderItem.setOrderInfo(order));
         return orderRepository.save(order);
+    }
+
+    public Order cancelOrder(Long id, User user) {
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Order not found")
+        );
+        if (!Objects.equals(order.getOwner().getId(), user.getId())) {
+            throw new ResourceNotFoundException("Order not found");
+        }
+        if(order.getStatus() == OrderStatus.CONFIRMED) {
+            order.setStatus(OrderStatus.CANCELLED);
+            return orderRepository.save(order);
+        }
+        else {
+            throw new RuntimeException("Cannot cancel order");
+        }
+
     }
 
     public List<Order> getListOrderByUser(Long id) {

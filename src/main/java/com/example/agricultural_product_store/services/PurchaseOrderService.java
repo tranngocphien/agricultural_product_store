@@ -3,6 +3,7 @@ package com.example.agricultural_product_store.services;
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CreatePurchaseOrderRequest;
 import com.example.agricultural_product_store.models.entity.PurchaseOrder;
+import com.example.agricultural_product_store.models.entity.PurchaseOrderStatus;
 import com.example.agricultural_product_store.models.entity.SupplierProduct;
 import com.example.agricultural_product_store.repositories.PurchaseOrderRepository;
 import com.example.agricultural_product_store.repositories.SupplierProductRepository;
@@ -31,7 +32,7 @@ public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
         purchaseOrder.setNote(request.getNote());
         purchaseOrder.setAmount(request.getAmount());
         purchaseOrder.setPrice(request.getPrice());
-        purchaseOrder.setStatus("IDLE");
+        purchaseOrder.setStatus(PurchaseOrderStatus.IDLE);
         purchaseOrder.setHarvestAt(request.getHarvestAt());
         purchaseOrder.setCreateTime(new Timestamp(System.currentTimeMillis()));
         purchaseOrder.setUpdateTime(new Timestamp(System.currentTimeMillis()));
@@ -42,7 +43,7 @@ public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Purchase order not found")
         );
-        purchaseOrder.setStatus("CONFIRMED");
+        purchaseOrder.setStatus(PurchaseOrderStatus.CONFIRM);
         purchaseOrder.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         return purchaseOrderRepository.save(purchaseOrder);
     }

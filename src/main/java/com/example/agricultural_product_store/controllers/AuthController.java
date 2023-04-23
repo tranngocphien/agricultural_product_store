@@ -10,7 +10,7 @@ import com.example.agricultural_product_store.models.entity.Role;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.RoleRepository;
 import com.example.agricultural_product_store.repositories.UserRepository;
-import com.example.agricultural_product_store.services.AccountService;
+import com.example.agricultural_product_store.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,9 +43,9 @@ public class AuthController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AccountService accountService;
+    private final UserService accountService;
 
-    public AuthController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AccountService accountService) {
+    public AuthController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserService accountService) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;

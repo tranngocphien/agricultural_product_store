@@ -2,26 +2,44 @@ package com.example.agricultural_product_store.controllers;
 
 import com.example.agricultural_product_store.dto.request.CreateSupplierProductRequest;
 import com.example.agricultural_product_store.dto.response.ResponseData;
+import com.example.agricultural_product_store.models.entity.SupplierProduct;
+import com.example.agricultural_product_store.models.entity.User;
+import com.example.agricultural_product_store.repositories.UserRepository;
 import com.example.agricultural_product_store.services.SupplierProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/supplier-products")
 public class SupplierProductController {
     private final SupplierProductService supplierProductService;
-
-    public SupplierProductController(SupplierProductService supplierProductService) {
+    private final UserRepository userRepository;
+    public SupplierProductController(SupplierProductService supplierProductService, UserRepository userRepository) {
         this.supplierProductService = supplierProductService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
-    public ResponseData create(@RequestBody CreateSupplierProductRequest request) {
-        return ResponseData.onSuccess("a");
+    public ResponseData create(Authentication authentication, @RequestBody CreateSupplierProductRequest request) {
+        User user = userRepository.findByUsername(authentication.getName()).get();
+        return ResponseData.onSuccess(supplierProductService.create(request, user ));
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseData<List<SupplierProduct>> getAll() {
+        return ResponseData.onSuccess(supplierProductService.list());
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    public ResponseData<List<SupplierProduct>> getListProductOfSupplier(Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName()).get();
+        return ResponseData.onSuccess(supplierProductService.getSupplierProductOfUser(user));
+
     }
 }

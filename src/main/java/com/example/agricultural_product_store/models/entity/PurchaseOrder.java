@@ -23,7 +23,8 @@ public class PurchaseOrder extends BaseEntity{
     private int price;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PurchaseOrderStatus status;
 
     @Column(name = "harvest_at")
     private Date harvestAt;
