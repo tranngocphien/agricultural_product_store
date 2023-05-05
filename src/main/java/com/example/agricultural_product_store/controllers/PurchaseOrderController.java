@@ -22,6 +22,19 @@ public class PurchaseOrderController {
         return ResponseData.onSuccess(purchaseOrderService.create(request));
     }
 
+    @PostMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseData<PurchaseOrder> update(@RequestBody CreatePurchaseOrderRequest request) {
+        return ResponseData.onSuccess(purchaseOrderService.create(request));
+    }
+
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseData<PurchaseOrder> delete(@PathVariable Long id) {
+        return ResponseData.onFail();
+    }
+
     @PostMapping("/confirm/{id}")
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public ResponseData<PurchaseOrder> confirm( @PathVariable Long id) {

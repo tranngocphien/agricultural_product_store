@@ -53,6 +53,9 @@ public class Product extends BaseEntity{
     @Column(name = "preservation")
     private String preservation;
 
+    @Column(name = "direction_for_use")
+    private String directionForUse;
+
     @OneToMany(mappedBy = "product")
     private Set<Comment> comments;
 

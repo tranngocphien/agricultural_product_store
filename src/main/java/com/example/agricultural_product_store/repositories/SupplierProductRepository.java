@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SupplierProductRepository extends JpaRepository<SupplierProduct, Long> {
     List<SupplierProduct> findAllByOwner(User user);
+    List<SupplierProduct> findByProductNameContains(String keyword);
 }

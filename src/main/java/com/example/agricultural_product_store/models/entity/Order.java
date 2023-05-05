@@ -24,6 +24,9 @@ public class Order extends BaseEntity{
     @Column(name = "shipping_address")
     private String shippingAddress;
 
+    @Column(name = "shipping_address_id")
+    private Long shippingAddressId;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

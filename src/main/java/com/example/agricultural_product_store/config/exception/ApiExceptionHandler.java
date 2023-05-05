@@ -14,4 +14,9 @@ public class ApiExceptionHandler {
     public ResponseEntity<ResponseData> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseData.onFail(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ResponseData> handleBusinessException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseData.onFail(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+    }
 }

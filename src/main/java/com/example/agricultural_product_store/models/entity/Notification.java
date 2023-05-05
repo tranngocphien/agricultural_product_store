@@ -14,6 +14,9 @@ public class Notification extends BaseEntity{
     @Column(name = "content")
     private String content;
 
+    @Column(name = "isRead")
+    private boolean isRead;
+
     @OneToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;

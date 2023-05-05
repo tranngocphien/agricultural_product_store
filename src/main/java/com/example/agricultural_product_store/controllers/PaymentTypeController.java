@@ -3,8 +3,6 @@ package com.example.agricultural_product_store.controllers;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.PaymentType;
 import com.example.agricultural_product_store.services.PaymentTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

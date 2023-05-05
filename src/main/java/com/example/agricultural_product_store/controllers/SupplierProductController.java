@@ -29,6 +29,20 @@ public class SupplierProductController {
         return ResponseData.onSuccess(supplierProductService.create(request, user ));
     }
 
+    @PostMapping("/update")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    public ResponseData update(Authentication authentication, @RequestBody CreateSupplierProductRequest request) {
+        User user = userRepository.findByUsername(authentication.getName()).get();
+        return ResponseData.onSuccess(supplierProductService.create(request, user ));
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    public ResponseData delete(Authentication authentication, @PathVariable("id") Long id) {
+        User user = userRepository.findByUsername(authentication.getName()).get();
+        return ResponseData.onFail();
+    }
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseData<List<SupplierProduct>> getAll() {
@@ -40,6 +54,11 @@ public class SupplierProductController {
     public ResponseData<List<SupplierProduct>> getListProductOfSupplier(Authentication authentication) {
         User user = userRepository.findByUsername(authentication.getName()).get();
         return ResponseData.onSuccess(supplierProductService.getSupplierProductOfUser(user));
+    }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    public ResponseData<List<SupplierProduct>> search(@RequestParam String keyword) {
+        return ResponseData.onSuccess(supplierProductService.search(keyword));
     }
 }

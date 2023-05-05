@@ -45,4 +45,8 @@ public class SupplierProductService extends BaseService<SupplierProduct, Long> {
     public List<SupplierProduct> getSupplierProductOfUser(User user) {
         return supplierProductRepository.findAllByOwner(user);
     }
+
+    public List<SupplierProduct> search(String keyword) {
+        return supplierProductRepository.findByProductNameContains(keyword);
+    }
 }

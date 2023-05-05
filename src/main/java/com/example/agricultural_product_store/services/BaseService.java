@@ -20,6 +20,4 @@ public class BaseService<T, ID> {
         return repository.findById(id);
     }
 
-
-
 }

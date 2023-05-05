@@ -1,6 +1,7 @@
 package com.example.agricultural_product_store.models.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,6 +23,9 @@ public class User extends BaseEntity {
 
     @Column(name = "username")
     private String username;
+
+    @Column(name = "avatar")
+    private String avatar;
 
     @Column(name = "password")
     private String password;
@@ -52,11 +56,15 @@ public class User extends BaseEntity {
     @Column(name = "dob")
     private Date dob;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(	name = "user_favourite",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favourite = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<ShippingAddress> shippingAddresses;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_time", nullable = false, updatable = false)
@@ -67,7 +75,4 @@ public class User extends BaseEntity {
     @Column(name = "update_time", nullable = false)
     @LastModifiedDate
     private Date updateTime;
-
-
-
 }
