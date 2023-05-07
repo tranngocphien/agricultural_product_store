@@ -2,11 +2,10 @@ package com.example.agricultural_product_store.services;
 
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
+import com.example.agricultural_product_store.dto.response.ShippingAddressResponse;
 import com.example.agricultural_product_store.models.entity.*;
-import com.example.agricultural_product_store.repositories.OrderItemRepository;
-import com.example.agricultural_product_store.repositories.OrderRepository;
-import com.example.agricultural_product_store.repositories.PaymentTypeRepository;
-import com.example.agricultural_product_store.repositories.ProductRepository;
+import com.example.agricultural_product_store.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,14 +20,16 @@ public class OrderService extends BaseService<Order, Long> {
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private PaymentTypeRepository paymentTypeRepository;
+    private final ShippingAddressRepository shippingAddressRepository;
 
     private ProductRepository productRepository;
-    OrderService(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository) {
+    OrderService(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository) {
         super(repository);
         this.orderRepository = repository;
         this.orderItemRepository = orderItemRepository;
         this.paymentTypeRepository = paymentTypeRepository;
         this.productRepository = productRepository;
+        this.shippingAddressRepository = shippingAddressRepository;
     }
 
     @Transactional
@@ -36,11 +37,13 @@ public class OrderService extends BaseService<Order, Long> {
         PaymentType paymentType = paymentTypeRepository.findById(request.getPaymentTypeId()).orElseThrow(
                 () -> new ResourceNotFoundException("Payment type not found")
         );
+        ShippingAddress shippingAddress = shippingAddressRepository.findById(request.getShippingAddressId()).orElseThrow(
+                () -> new ResourceNotFoundException("Shipping address not found"));
         Order order = new Order();
         order.setPaymentType(paymentType);
         order.setAmount(request.getAmount());
         order.setShippingFee(request.getShippingFee());
-        order.setShippingAddress(request.getShippingAddress());
+        order.setShippingAddress(shippingAddress);
         order.setPhoneNumber(request.getPhoneNumber());
         order.setStatus(OrderStatus.CONFIRMED);
         order.setOwner(user);

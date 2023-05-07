@@ -6,6 +6,7 @@ public class CreateOrderRequest {
     private int amount;
     private int shippingFee;
     private String shippingAddress;
+    private Long shippingAddressId;
     private Long paymentTypeId;
     private List<OrderItemRequest> items;
     private String phoneNumber;

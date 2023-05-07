@@ -21,11 +21,9 @@ public class Order extends BaseEntity{
     private int amount;
     @Column(name = "shipping_fee")
     private int shippingFee;
-    @Column(name = "shipping_address")
-    private String shippingAddress;
-
-    @Column(name = "shipping_address_id")
-    private Long shippingAddressId;
+    @OneToOne
+    @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
+    private ShippingAddress shippingAddress;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

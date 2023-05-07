@@ -1,6 +1,7 @@
 package com.example.agricultural_product_store.services;
 
 import com.example.agricultural_product_store.config.exception.BusinessException;
+import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.*;
 import com.example.agricultural_product_store.models.entity.ShippingAddress;
 import com.example.agricultural_product_store.models.entity.User;
@@ -37,7 +38,10 @@ public class UserService extends BaseService<User, Long>{
         return userRepository.findByUsername(username);
     }
 
-    public User updateUserInfo(User user, UpdateUserInfoRequest request) {
+    public User updateUserInfo(Authentication authentication, UpdateUserInfoRequest request) {
+        User user = getUserByUsername(authentication.getName()).orElseThrow(
+                () -> new BusinessException("User not found")
+        );
         user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setDob(request.getDob());
@@ -46,6 +50,7 @@ public class UserService extends BaseService<User, Long>{
         user.setLocation(request.getLocation());
         user.setGender(request.getGender());
         user.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
+        userRepository.save(user);
         return user;
     }
 
@@ -108,13 +113,13 @@ public class UserService extends BaseService<User, Long>{
 
     public ShippingAddress deleteShippingAddress(Authentication authentication, Long id) {
         User user = getUserByUsername(authentication.getName()).orElseThrow(
-                () -> new BusinessException("User not found")
+                () -> new ResourceNotFoundException("User not found")
         );
         ShippingAddress shippingAddress = shippingAddressRepository.findById(id).orElseThrow(
-                () -> new BusinessException("Shipping address not found")
+                () -> new ResourceNotFoundException("Shipping address not found")
         );
         if(shippingAddress.getUser().getId() != user.getId()) {
-            throw new BusinessException("Shipping address not found");
+            throw new ResourceNotFoundException("Shipping address not found");
         }
         shippingAddressRepository.delete(shippingAddress);
         return shippingAddress;

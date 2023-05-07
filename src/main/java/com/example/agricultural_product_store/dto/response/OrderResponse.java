@@ -14,7 +14,8 @@ public class OrderResponse {
     private Long id;
     private int amount;
     private int shippingFee;
-    private String shippingAddress;
+//    private String shippingAddress;
+    private ShippingAddressResponse shippingAddress;
     private String status;
     private PaymentType paymentType;
     private Set<OrderItemResponse> items;
