@@ -4,6 +4,7 @@ import com.example.agricultural_product_store.config.exception.ResourceNotFoundE
 import com.example.agricultural_product_store.dto.request.CommentRequest;
 import com.example.agricultural_product_store.dto.request.CreateProductRequest;
 import com.example.agricultural_product_store.dto.request.UpdateProductRequest;
+import com.example.agricultural_product_store.dto.response.PaginationInfo;
 import com.example.agricultural_product_store.dto.response.ProductResponse;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.Comment;
@@ -12,6 +13,9 @@ import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.services.ProductService;
 import com.example.agricultural_product_store.services.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +37,24 @@ public class ProductController {
     }
 
     @GetMapping()
+    @CrossOrigin
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseData<List<ProductResponse>> list() {
-        List<Product> products = productService.list();
-        List<ProductResponse> responses = products.stream().map(product -> {
+    public ResponseData<PaginationInfo<List<ProductResponse>>> list(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
+            ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.listPage(pageable);
+        List<ProductResponse> products = productPage.getContent().stream().map(product -> {
             return modelMapper.map(product, ProductResponse.class);
         }).collect(Collectors.toList());
-        return ResponseData.onSuccess(responses);
+        PaginationInfo<List<ProductResponse>> response = new PaginationInfo();
+        response.setData(products);
+        response.setPage(productPage.getNumber());
+        response.setSize(products.size());
+        response.setTotalPage(productPage.getTotalPages());
+        response.setTotalElement(productPage.getTotalElements());
+        return ResponseData.onSuccess(response);
     }
 
     @GetMapping("/search?keyword={keyword}")
@@ -63,7 +78,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product detail( @PathVariable("id") Long id) {
+    public Product detail(@PathVariable("id") Long id) {
         return productService.detail(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
@@ -87,7 +102,7 @@ public class ProductController {
 
     @PostMapping("/comment/{id}")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseData<Comment> comment(Authentication authentication,@PathVariable("id") Long id, @RequestBody CommentRequest comment) {
+    public ResponseData<Comment> comment(Authentication authentication, @PathVariable("id") Long id, @RequestBody CommentRequest comment) {
         return ResponseData.onSuccess(productService.commentProduct(authentication, id, comment));
     }
 

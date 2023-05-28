@@ -62,7 +62,7 @@ public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
         purchaseOrder.setNote(request.getNote());
         purchaseOrder.setAmount(request.getAmount());
         purchaseOrder.setPrice(request.getPrice());
-        purchaseOrder.setStatus(PurchaseOrderStatus.IDLE);
+        purchaseOrder.setStatus(request.getStatus());
         purchaseOrder.setHarvestAt(request.getHarvestAt());
         purchaseOrder.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         return purchaseOrderRepository.save(purchaseOrder);
@@ -72,7 +72,7 @@ public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Purchase order not found")
         );
-        purchaseOrder.setStatus(PurchaseOrderStatus.CONFIRM);
+        purchaseOrder.setStatus(PurchaseOrderStatus.PROCESS);
         purchaseOrder.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         return purchaseOrderRepository.save(purchaseOrder);
     }

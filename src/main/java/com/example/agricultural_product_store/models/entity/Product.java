@@ -31,15 +31,11 @@ public class Product extends BaseEntity{
     @JsonIgnore
     private Category category;
 
-    @Column(name = "location")
-    private String location;
+    @Column(name = "origin")
+    private String origin;
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "certificate_type")
-    private String certificateType;
-
     @ElementCollection
     @CollectionTable(name = "certificate_image", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image")

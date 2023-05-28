@@ -5,17 +5,21 @@ import com.example.agricultural_product_store.dto.request.LoginRequest;
 import com.example.agricultural_product_store.dto.request.RegisterRequest;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.dto.response.JwtResponse;
+import com.example.agricultural_product_store.dto.response.UserResponse;
 import com.example.agricultural_product_store.models.entity.ERole;
 import com.example.agricultural_product_store.models.entity.Role;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.RoleRepository;
 import com.example.agricultural_product_store.repositories.UserRepository;
 import com.example.agricultural_product_store.services.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,29 +48,29 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     private final UserService accountService;
+    private final ModelMapper modelMapper;
 
-    public AuthController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserService accountService) {
+    public AuthController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserService accountService, ModelMapper modelMapper) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.accountService = accountService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseData<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateJwtToken(authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream().map(e -> e.getAuthority()).collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(
-                jwt, userDetails.getUsername(), roles
-        ));
+        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseData.onSuccess(new JwtResponse(jwt, modelMapper.map(user, UserResponse.class), roles));
     }
 
     @PostMapping("/register")
@@ -87,7 +91,7 @@ public class AuthController {
         user.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         userRepository.save(user);
 
-        return ResponseData.onSuccess("SUCCESS");
+        return ResponseData.onSuccess("Register successfully");
     }
 
 }

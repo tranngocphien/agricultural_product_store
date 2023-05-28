@@ -1,6 +1,5 @@
 package com.example.agricultural_product_store.controllers;
 
-import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.RegisterSupplierRequest;
 import com.example.agricultural_product_store.dto.request.UpdateSupplierRequest;
 import com.example.agricultural_product_store.dto.response.ResponseData;
@@ -13,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 import java.util.List;
 

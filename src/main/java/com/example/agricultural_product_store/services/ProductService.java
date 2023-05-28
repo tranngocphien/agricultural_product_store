@@ -7,11 +7,9 @@ import com.example.agricultural_product_store.dto.request.UpdateProductRequest;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.*;
 import com.example.agricultural_product_store.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -58,8 +56,7 @@ public class ProductService extends BaseService<Product, Long>{
         product.setDescription(request.getDescription());
         product.setPreservation(request.getPreservation());
         product.setStock(request.getStock());
-        product.setLocation(request.getOriginalLocation());
-        product.setCertificateType(request.getCertificateType());
+        product.setOrigin(request.getOriginalLocation());
         product.setSupplier(supplier);
         product.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
         product.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
@@ -82,8 +79,7 @@ public class ProductService extends BaseService<Product, Long>{
         product.setDescription(request.getDescription());
         product.setPreservation(request.getPreservation());
         product.setStock(request.getStock());
-        product.setLocation(request.getOriginalLocation());
-        product.setCertificateType(request.getCertificateType());
+        product.setOrigin(request.getOriginalLocation());
         product.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         return productRepository.save(product);
     }

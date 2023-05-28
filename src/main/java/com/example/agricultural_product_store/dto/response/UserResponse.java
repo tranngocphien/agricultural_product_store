@@ -14,7 +14,4 @@ public class UserResponse {
     private String location;
     private int gender;
     private Date dob;
-    private Date createTime;
-    private Date updateTime;
-
 }

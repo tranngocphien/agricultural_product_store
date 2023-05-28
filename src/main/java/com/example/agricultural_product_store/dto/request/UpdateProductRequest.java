@@ -21,7 +21,6 @@ public class UpdateProductRequest {
     private Long categoryID;
     private String originalLocation;
     private String description;
-    private String certificateType;
     private List<String> certificateImages;
     private List<String> images;
     private String preservation;

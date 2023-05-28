@@ -1,5 +1,6 @@
 package com.example.agricultural_product_store.dto.response;
 
+import com.example.agricultural_product_store.models.entity.Comment;
 import lombok.Data;
 
 import java.util.Set;
@@ -12,10 +13,10 @@ public class ProductResponse {
     private String sku;
     private int stock;
     private CategoryResponse category;
-    private String location;
+    private String origin;
     private String description;
-    private String certificateType;
     private Set<String> certificateImages;
     private Set<String> images;
+    private Set<CommentResponse> comments;
     private String preservation;
 }

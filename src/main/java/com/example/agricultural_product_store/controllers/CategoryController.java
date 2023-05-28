@@ -25,7 +25,8 @@ public class CategoryController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(value = "/list")
+    @GetMapping()
+    @CrossOrigin
     public ResponseData<List<Category>> list() {
         return ResponseData.onSuccess(categoryService.list().stream().map(category -> modelMapper.map(category, Category.class)).collect(Collectors.toList()));
     }
@@ -48,5 +49,4 @@ public class CategoryController {
     public ResponseData<Category> delete(@PathVariable("id") Long id) {
         return ResponseData.onSuccess(categoryService.delete(id));
     }
-
 }

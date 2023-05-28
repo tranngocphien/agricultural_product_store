@@ -1,16 +1,14 @@
 package com.example.agricultural_product_store.dto.response;
 
-import com.example.agricultural_product_store.models.entity.User;
+import lombok.Data;
 
-import javax.persistence.*;
-
+@Data
 public class SupplierResponse {
     private Long id;
     private String name;
     private String location;
     private String description;
     private String brandImage;
-
     private String idNumber;
     private UserResponse owner;
 }
