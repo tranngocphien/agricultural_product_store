@@ -38,7 +38,6 @@ public class ProductController {
 
     @GetMapping()
     @CrossOrigin
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseData<PaginationInfo<List<ProductResponse>>> list(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
@@ -58,7 +57,6 @@ public class ProductController {
     }
 
     @GetMapping("/search?keyword={keyword}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseData<List<ProductResponse>> search(@PathVariable String keyword) {
         List<Product> products = productService.searchProduct(keyword);
         List<ProductResponse> responses = products.stream().map(product -> {
@@ -68,7 +66,6 @@ public class ProductController {
     }
 
     @GetMapping("/filter")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseData<List<ProductResponse>> getListProductsByCategoryId(@RequestParam(name = "categoryId") Long id) {
         List<Product> products = productService.findProductByCategoryId(id);
         List<ProductResponse> responses = products.stream().map(
@@ -78,8 +75,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product detail(@PathVariable("id") Long id) {
-        return productService.detail(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    public ResponseData<ProductResponse> detail(@PathVariable("id") Long id) {
+        return ResponseData.onSuccess(modelMapper.map( productService.detail(id).orElseThrow(() -> new ResourceNotFoundException("Product not found")), ProductResponse.class));
     }
 
     @PostMapping("/create")
@@ -96,7 +93,7 @@ public class ProductController {
 
     @PostMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseData<Comment> delete(@PathVariable("id") Long id) {
+    public ResponseData delete(@PathVariable("id") Long id) {
         return productService.deleteProduct(id);
     }
 
@@ -118,5 +115,4 @@ public class ProductController {
         ).collect(Collectors.toList());
         return ResponseData.onSuccess(responses);
     }
-
 }
