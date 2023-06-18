@@ -1,5 +1,6 @@
 package com.example.agricultural_product_store.services;
 
+import com.example.agricultural_product_store.config.exception.BusinessException;
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
 import com.example.agricultural_product_store.dto.response.ShippingAddressResponse;
@@ -53,6 +54,9 @@ public class OrderService extends BaseService<Order, Long> {
             Product product = productRepository.findById(item.getProductId()).orElseThrow(
                     () -> new ResourceNotFoundException("Product not found")
             );
+            if(product.getStock() < item.getAmount()) {
+                throw new BusinessException("Not enough product in stock");
+            }
             OrderItem orderItem = new OrderItem();
             orderItem.setQuantity(item.getAmount());
             orderItem.setProduct(product);

@@ -41,6 +41,11 @@ public class SupplierController {
         return ResponseData.onSuccess(modelMapper.map(supplierService.getSupplierInfo(authentication), SupplierResponse.class));
     }
 
+    @GetMapping("/{id}")
+    public ResponseData<SupplierResponse> getSupplierInfoById(@PathVariable Long id) {
+        return ResponseData.onSuccess(modelMapper.map(supplierService.getSupplierInfoById(id), SupplierResponse.class));
+    }
+
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_SUPPLIER') or hasRole('ROLE_ADMIN')")
     public ResponseData<SupplierResponse> update(Authentication authentication, @RequestBody UpdateSupplierRequest request) {

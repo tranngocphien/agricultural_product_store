@@ -82,13 +82,10 @@ public class UserService extends BaseService<User, Long>{
                 () -> new BusinessException("User not found")
         );
         ShippingAddress shippingAddress = new ShippingAddress();
+        shippingAddress.setAddress(request.getAddress());
         shippingAddress.setUser(user);
         shippingAddress.setName(request.getName());
         shippingAddress.setPhoneNumber(request.getPhoneNumber());
-        shippingAddress.setStreet(request.getStreet());
-        shippingAddress.setWardId(request.getWardId());
-        shippingAddress.setDistrictId(request.getDistrictId());
-        shippingAddress.setProvinceId(request.getProvinceId());
         return shippingAddressRepository.save(shippingAddress);
     }
 
@@ -102,12 +99,9 @@ public class UserService extends BaseService<User, Long>{
         if(shippingAddress.getUser().getId() != user.getId()) {
             throw new BusinessException("Shipping address not found");
         }
+        shippingAddress.setAddress(request.getAddress());
         shippingAddress.setName(request.getName());
         shippingAddress.setPhoneNumber(request.getPhoneNumber());
-        shippingAddress.setStreet(request.getStreet());
-        shippingAddress.setWardId(request.getWardId());
-        shippingAddress.setDistrictId(request.getDistrictId());
-        shippingAddress.setProvinceId(request.getProvinceId());
         return shippingAddressRepository.save(shippingAddress);
     }
 

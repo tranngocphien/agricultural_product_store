@@ -20,8 +20,8 @@ import java.util.List;
 
 @Service
 public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
-    private PurchaseOrderRepository purchaseOrderRepository;
-    private SupplierProductRepository supplierProductRepository;
+    private final PurchaseOrderRepository purchaseOrderRepository;
+    private final SupplierProductRepository supplierProductRepository;
     private final UserRepository userRepository;
 
     PurchaseOrderService(PurchaseOrderRepository repository, SupplierProductRepository supplierProductRepository, UserRepository userRepository) {

@@ -38,7 +38,7 @@ public class ProductController {
 
     @GetMapping()
     @CrossOrigin
-    public ResponseData<PaginationInfo<List<ProductResponse>>> list(
+    public ResponseData<List<ProductResponse>> list(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
             ) {
@@ -47,13 +47,12 @@ public class ProductController {
         List<ProductResponse> products = productPage.getContent().stream().map(product -> {
             return modelMapper.map(product, ProductResponse.class);
         }).collect(Collectors.toList());
-        PaginationInfo<List<ProductResponse>> response = new PaginationInfo();
-        response.setData(products);
-        response.setPage(productPage.getNumber());
-        response.setSize(products.size());
-        response.setTotalPage(productPage.getTotalPages());
-        response.setTotalElement(productPage.getTotalElements());
-        return ResponseData.onSuccess(response);
+        PaginationInfo paginationInfo = new PaginationInfo();
+        paginationInfo.setPage(productPage.getNumber());
+        paginationInfo.setSize(products.size());
+        paginationInfo.setTotalPage(productPage.getTotalPages());
+        paginationInfo.setTotalElement(productPage.getTotalElements());
+        return ResponseData.onSuccess(products, paginationInfo);
     }
 
     @GetMapping("/search?keyword={keyword}")

@@ -10,15 +10,9 @@ public class ShippingAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "address")
+    private String address;
 
-    @Column(name = "province_id")
-    private String provinceId;
-    @Column(name = "district_id")
-    private String districtId;
-    @Column(name = "ward_id")
-    private String wardId;
-    @Column(name = "street")
-    private String street;
     @Column(name = "name")
     private String name;
     @Column(name = "phone_number")

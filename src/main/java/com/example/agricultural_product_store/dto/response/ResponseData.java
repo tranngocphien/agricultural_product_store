@@ -11,6 +11,7 @@ public class ResponseData<T> {
     private int code;
     private String message;
     private T data;
+    private PaginationInfo paginationInfo;
     ResponseData() {
     }
     ResponseData(int code, String message) {
@@ -23,6 +24,15 @@ public class ResponseData<T> {
         response.data = data;
         response.code = HttpStatus.OK.value();
         response.message = "SUCCESS";
+        return response;
+    }
+
+    public static <T> ResponseData<T> onSuccess(T data, PaginationInfo paginationInfo) {
+        ResponseData<T> response = new ResponseData<>();
+        response.data = data;
+        response.code = HttpStatus.OK.value();
+        response.message = "SUCCESS";
+        response.paginationInfo = paginationInfo;
         return response;
     }
 

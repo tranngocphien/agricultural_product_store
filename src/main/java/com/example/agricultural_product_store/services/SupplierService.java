@@ -55,6 +55,12 @@ public class SupplierService extends BaseService<Supplier, Long> {
         );
     }
 
+    public Supplier getSupplierInfoById(Long id) {
+        return supplierRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Error: Supplier is not found.")
+        );
+    }
+
     public Supplier updateSupplier(UpdateSupplierRequest request, Authentication authentication) {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(
                 () -> new ResourceNotFoundException("Error: User is not found.")

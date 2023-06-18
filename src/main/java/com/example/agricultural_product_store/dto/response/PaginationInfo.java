@@ -3,8 +3,7 @@ package com.example.agricultural_product_store.dto.response;
 import lombok.Data;
 
 @Data
-public class PaginationInfo<T> {
-    private T data;
+public class PaginationInfo {
     private int page;
     private int size;
     private int totalPage;

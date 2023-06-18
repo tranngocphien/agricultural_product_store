@@ -7,10 +7,7 @@ import javax.persistence.*;
 
 @Data
 public class CreateShippingAddressRequest {
-    private String provinceId;
-    private String districtId;
-    private String wardId;
-    private String street;
+    private String address;
     private String name;
     private String phoneNumber;
 }
