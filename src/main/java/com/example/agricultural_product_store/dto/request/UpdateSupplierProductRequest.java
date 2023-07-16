@@ -16,7 +16,7 @@ public class UpdateSupplierProductRequest {
 
     @NotNull
     private int expectedPrice;
-    private String originalLocation;
+    private String location;
     private String description;
     private String certificateType;
     private List<String> certificateImages;

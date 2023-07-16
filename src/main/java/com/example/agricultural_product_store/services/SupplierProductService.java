@@ -35,7 +35,7 @@ public class SupplierProductService extends BaseService<SupplierProduct, Long> {
         supplierProduct.setOwner(owner);
         supplierProduct.setProductName(request.getName());
         supplierProduct.setExpectedPrice(request.getExpectedPrice());
-        supplierProduct.setLocation(request.getOriginalLocation());
+        supplierProduct.setLocation(request.getLocation());
         supplierProduct.setImages(new HashSet<>(request.getImages()));
         supplierProduct.setCertificateImages(new HashSet<>(request.getCertificateImages()));
         supplierProduct.setPreservation(request.getPreservation());
@@ -56,7 +56,7 @@ public class SupplierProductService extends BaseService<SupplierProduct, Long> {
         }
         supplierProduct.setProductName(request.getName());
         supplierProduct.setExpectedPrice(request.getExpectedPrice());
-        supplierProduct.setLocation(request.getOriginalLocation());
+        supplierProduct.setLocation(request.getLocation());
         supplierProduct.setImages(new HashSet<>(request.getImages()));
         supplierProduct.setCertificateImages(new HashSet<>(request.getCertificateImages()));
         supplierProduct.setPreservation(request.getPreservation());

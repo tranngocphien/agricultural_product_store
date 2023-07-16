@@ -1,11 +1,17 @@
 package com.example.agricultural_product_store.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
 @Entity(name = "comment")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +23,7 @@ public class Comment extends BaseEntity {
     @Column(name = "rate")
     private int rate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 

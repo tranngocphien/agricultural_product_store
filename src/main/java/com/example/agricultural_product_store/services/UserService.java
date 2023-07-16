@@ -45,6 +45,7 @@ public class UserService extends BaseService<User, Long>{
         user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setDob(request.getDob());
+        user.setAvatar(request.getAvatar());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setLocation(request.getLocation());
@@ -60,9 +61,8 @@ public class UserService extends BaseService<User, Long>{
     }
 
     public User changePassword(User user, ChangePasswordRequest request) {
-        if(!user.getPassword().equals(passwordEncoder.encode(request.getOldPassword()))) {
-            throw new BusinessException(USER_PASSWORD_NOT_MATCH);
-        }
+        if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new BusinessException(USER_PASSWORD_NOT_MATCH);        }
         else {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             user.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));

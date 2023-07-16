@@ -49,6 +49,12 @@ public class PurchaseOrderController {
         return ResponseData.onSuccess(modelMapper.map(purchaseOrderService.confirmPurchaseOrder(id), PurchaseOrderResponse.class));
     }
 
+    @PostMapping("/reject/{id}")
+    @PreAuthorize("hasRole('ROLE_SUPPLIER')")
+    public ResponseData<PurchaseOrderResponse> reject( @PathVariable Long id) {
+        return ResponseData.onSuccess(modelMapper.map(purchaseOrderService.rejectPurchaseOrder(id), PurchaseOrderResponse.class));
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ROLE_SUPPLIER')")
     public ResponseData<List<PurchaseOrderResponse>> getAll(Authentication authentication) {

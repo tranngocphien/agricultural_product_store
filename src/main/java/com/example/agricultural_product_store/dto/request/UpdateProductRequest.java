@@ -19,7 +19,7 @@ public class UpdateProductRequest {
     private int stock;
     @NotNull
     private Long categoryID;
-    private String originalLocation;
+    private String location;
     private String description;
     private List<String> certificateImages;
     private List<String> images;

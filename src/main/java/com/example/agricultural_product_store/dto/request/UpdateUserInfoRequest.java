@@ -10,6 +10,7 @@ public class UpdateUserInfoRequest {
     private String phoneNumber;
     private String firstName;
     private String lastName;
+    private String avatar;
     private String location;
     private int gender;
     private Date dob;

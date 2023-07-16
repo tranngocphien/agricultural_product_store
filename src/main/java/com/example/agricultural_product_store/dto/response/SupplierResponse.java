@@ -9,6 +9,5 @@ public class SupplierResponse {
     private String location;
     private String description;
     private String brandImage;
-    private String idNumber;
     private UserResponse owner;
 }

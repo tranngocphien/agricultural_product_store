@@ -11,5 +11,4 @@ public class CreateOrderRequest {
     private Long shippingAddressId;
     private Long paymentTypeId;
     private List<OrderItemRequest> items;
-    private String phoneNumber;
 }

@@ -11,12 +11,10 @@ public class CreateSupplierProductRequest {
     private String name;
     @NotNull
     private Long categoryID;
-
     @NotNull
     private int expectedPrice;
-    private String originalLocation;
+    private String location;
     private String description;
-    private String certificateType;
     private List<String> certificateImages;
     private List<String> images;
     private String preservation;

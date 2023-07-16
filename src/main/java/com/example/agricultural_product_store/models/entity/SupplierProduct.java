@@ -19,14 +19,14 @@ public class SupplierProduct extends BaseEntity{
     @Column(name = "expected_price")
     private int expectedPrice;
 
+    @Column(name = "sku")
+    private String sku;
+
     @Column(name = "location")
     private String location;
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "certificate_type")
-    private String certificateType;
 
     @ElementCollection
     @CollectionTable(name = "certificate_image", joinColumns = @JoinColumn(name = "supplier_product_id"))

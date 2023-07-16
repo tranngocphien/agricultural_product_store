@@ -27,8 +27,8 @@ public class CategoryController {
 
     @GetMapping()
     @CrossOrigin
-    public ResponseData<List<Category>> list() {
-        return ResponseData.onSuccess(categoryService.list().stream().map(category -> modelMapper.map(category, Category.class)).collect(Collectors.toList()));
+    public ResponseData<List<CategoryResponse>> list() {
+        return ResponseData.onSuccess(categoryService.list().stream().map(category -> modelMapper.map(category, CategoryResponse.class)).collect(Collectors.toList()));
     }
 
     @PostMapping(value = "/create")

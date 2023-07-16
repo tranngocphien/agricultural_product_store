@@ -1,11 +1,15 @@
 package com.example.agricultural_product_store.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity(name = "shipping_address")
-@Data
+@Getter
+@Setter
 public class ShippingAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,5 +23,6 @@ public class ShippingAddress {
     private String phoneNumber;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 }

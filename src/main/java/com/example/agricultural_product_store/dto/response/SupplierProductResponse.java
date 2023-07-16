@@ -14,14 +14,11 @@ public class SupplierProductResponse {
     private Long id;
     private String productName;
     private int expectedPrice;
+    private String sku;
     private String location;
+    private CategoryResponse category;
     private String description;
-    private String certificateType;
     private Set<String> certificateImages;
     private Set<String> images;
     private String preservation;
-
-    private Category category;
-
-
 }

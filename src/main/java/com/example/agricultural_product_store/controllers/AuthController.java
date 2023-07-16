@@ -1,5 +1,6 @@
 package com.example.agricultural_product_store.controllers;
 
+import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.config.security.JwtUtil;
 import com.example.agricultural_product_store.dto.request.LoginRequest;
 import com.example.agricultural_product_store.dto.request.RegisterRequest;
@@ -69,7 +70,7 @@ public class AuthController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return ResponseData.onSuccess(new JwtResponse(jwt, modelMapper.map(user, UserResponse.class), roles));
     }
 

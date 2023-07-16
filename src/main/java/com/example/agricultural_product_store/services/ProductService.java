@@ -56,7 +56,7 @@ public class ProductService extends BaseService<Product, Long>{
         product.setDescription(request.getDescription());
         product.setPreservation(request.getPreservation());
         product.setStock(request.getStock());
-        product.setOrigin(request.getOriginalLocation());
+        product.setOrigin(request.getLocation());
         product.setSupplier(supplier);
         product.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
         product.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
@@ -79,7 +79,7 @@ public class ProductService extends BaseService<Product, Long>{
         product.setDescription(request.getDescription());
         product.setPreservation(request.getPreservation());
         product.setStock(request.getStock());
-        product.setOrigin(request.getOriginalLocation());
+        product.setOrigin(request.getLocation());
         product.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         return productRepository.save(product);
     }

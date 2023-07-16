@@ -41,7 +41,7 @@ public class ProductController {
     public ResponseData<List<ProductResponse>> list(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
-            ) {
+    ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.listPage(pageable);
         List<ProductResponse> products = productPage.getContent().stream().map(product -> {
@@ -55,8 +55,8 @@ public class ProductController {
         return ResponseData.onSuccess(products, paginationInfo);
     }
 
-    @GetMapping("/search?keyword={keyword}")
-    public ResponseData<List<ProductResponse>> search(@PathVariable String keyword) {
+    @GetMapping("/search")
+    public ResponseData<List<ProductResponse>> search(@RequestParam String keyword) {
         List<Product> products = productService.searchProduct(keyword);
         List<ProductResponse> responses = products.stream().map(product -> {
             return modelMapper.map(product, ProductResponse.class);
@@ -75,7 +75,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseData<ProductResponse> detail(@PathVariable("id") Long id) {
-        return ResponseData.onSuccess(modelMapper.map( productService.detail(id).orElseThrow(() -> new ResourceNotFoundException("Product not found")), ProductResponse.class));
+        return ResponseData.onSuccess(modelMapper.map(productService.detail(id).orElseThrow(() -> new ResourceNotFoundException("Product not found")), ProductResponse.class));
     }
 
     @PostMapping("/create")

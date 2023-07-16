@@ -15,8 +15,10 @@ public class ProductResponse {
     private CategoryResponse category;
     private String origin;
     private String description;
+    private String directionForUse;
     private Set<String> certificateImages;
     private Set<String> images;
     private Set<CommentResponse> comments;
     private String preservation;
+    private SupplierResponse supplier;
 }

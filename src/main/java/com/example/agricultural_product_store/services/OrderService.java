@@ -2,11 +2,10 @@ package com.example.agricultural_product_store.services;
 
 import com.example.agricultural_product_store.config.exception.BusinessException;
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
+import com.example.agricultural_product_store.dto.request.CommentRequest;
 import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
-import com.example.agricultural_product_store.dto.response.ShippingAddressResponse;
 import com.example.agricultural_product_store.models.entity.*;
 import com.example.agricultural_product_store.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,15 +21,17 @@ public class OrderService extends BaseService<Order, Long> {
     private OrderItemRepository orderItemRepository;
     private PaymentTypeRepository paymentTypeRepository;
     private final ShippingAddressRepository shippingAddressRepository;
+    private final CommentRepository commentRepository;
 
     private ProductRepository productRepository;
-    OrderService(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository) {
+    OrderService(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, CommentRepository commentRepository) {
         super(repository);
         this.orderRepository = repository;
         this.orderItemRepository = orderItemRepository;
         this.paymentTypeRepository = paymentTypeRepository;
         this.productRepository = productRepository;
         this.shippingAddressRepository = shippingAddressRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional
@@ -45,8 +46,7 @@ public class OrderService extends BaseService<Order, Long> {
         order.setAmount(request.getAmount());
         order.setShippingFee(request.getShippingFee());
         order.setShippingAddress(shippingAddress);
-        order.setPhoneNumber(request.getPhoneNumber());
-        order.setStatus(OrderStatus.CONFIRMED);
+        order.setStatus(OrderStatus.IDLE);
         order.setOwner(user);
         order.setCreateTime(new Timestamp(System.currentTimeMillis()));
         order.setUpdateTime(new Timestamp(System.currentTimeMillis()));
@@ -76,17 +76,38 @@ public class OrderService extends BaseService<Order, Long> {
         if (!Objects.equals(order.getOwner().getId(), user.getId())) {
             throw new ResourceNotFoundException("Order not found");
         }
-        if(order.getStatus() == OrderStatus.CONFIRMED) {
+        if(order.getStatus() == OrderStatus.IDLE) {
             order.setStatus(OrderStatus.CANCELLED);
             return orderRepository.save(order);
         }
         else {
-            throw new RuntimeException("Cannot cancel order");
+            throw new BusinessException("Không thể hủy đơn hàng này");
         }
 
     }
 
     public List<Order> getListOrderByUser(Long id) {
         return orderRepository.findAllByOwnerId(id);
+    }
+
+    public Comment commentProduct(User user, CommentRequest request) {
+        OrderItem orderItem = orderItemRepository.findById(request.getOrderItemId()).orElseThrow(
+                () -> new ResourceNotFoundException("Order item not found")
+        );
+        if (!Objects.equals(orderItem.getOrderInfo().getOwner().getId(), user.getId())) {
+            throw new ResourceNotFoundException("Order item not found");
+        }
+        orderItem.setHasReview(true);
+        orderItemRepository.save(orderItem);
+        Product product = orderItem.getProduct();
+        Comment comment = new Comment();
+        comment.setOwner(user);
+        comment.setProduct(product);
+        comment.setRate(request.getRate());
+        comment.setContent(request.getContent());
+        comment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        comment.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        return commentRepository.save(comment);
+
     }
 }

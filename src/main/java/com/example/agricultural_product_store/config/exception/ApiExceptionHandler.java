@@ -17,6 +17,6 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ResponseData> handleBusinessException(BusinessException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseData.onFail(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseData.onFail(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
     }
 }

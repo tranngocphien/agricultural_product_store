@@ -12,7 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "user")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {

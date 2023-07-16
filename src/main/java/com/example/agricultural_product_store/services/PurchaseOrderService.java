@@ -77,6 +77,15 @@ public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
         return purchaseOrderRepository.save(purchaseOrder);
     }
 
+    public PurchaseOrder rejectPurchaseOrder(Long id) {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Purchase order not found")
+        );
+        purchaseOrder.setStatus(PurchaseOrderStatus.REJECT);
+        purchaseOrder.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        return purchaseOrderRepository.save(purchaseOrder);
+    }
+
     public List<PurchaseOrder> getAllByUserId(Authentication authentication) {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")

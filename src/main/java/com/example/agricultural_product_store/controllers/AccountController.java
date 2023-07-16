@@ -37,12 +37,6 @@ public class AccountController {
         return ResponseData.onSuccess(modelMapper.map(userService.updateUserInfo(authentication, request), UserResponse.class));
     }
 
-    @PostMapping("update-avatar")
-    public ResponseData<UserResponse> updateAvatar(Authentication authentication,@RequestBody UpdateAvatarRequest request) {
-        final User user = userService.getUserByUsername(authentication.getName()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return ResponseData.onSuccess(modelMapper.map(userService.updateAvatar(user, request), UserResponse.class));
-    }
-
     @PostMapping("/change-password")
     public ResponseData<UserResponse> changePassword(Authentication authentication,@RequestBody ChangePasswordRequest request) {
         final User user = userService.getUserByUsername(authentication.getName()).orElseThrow(() -> new ResourceNotFoundException("User not found"));

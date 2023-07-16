@@ -12,6 +12,7 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String location;
+    private String avatar;
     private int gender;
     private Date dob;
 }

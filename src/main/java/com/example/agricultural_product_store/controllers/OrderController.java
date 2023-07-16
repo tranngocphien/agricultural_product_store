@@ -1,7 +1,9 @@
 package com.example.agricultural_product_store.controllers;
 
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
+import com.example.agricultural_product_store.dto.request.CommentRequest;
 import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
+import com.example.agricultural_product_store.dto.response.CommentResponse;
 import com.example.agricultural_product_store.dto.response.OrderResponse;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.Order;
@@ -64,5 +66,13 @@ public class OrderController  {
             throw new ResourceNotFoundException("Order not found");
         }
         return ResponseData.onSuccess(modelMapper.map(order, OrderResponse.class));
+    }
+
+    @PostMapping(value = "/rate")
+    public ResponseData<CommentResponse> commentProduct(Principal principal, @RequestBody CommentRequest request) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
+        return ResponseData.onSuccess(modelMapper.map(orderService.commentProduct(user, request), CommentResponse.class));
     }
 }

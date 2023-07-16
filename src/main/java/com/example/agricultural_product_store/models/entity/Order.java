@@ -38,11 +38,11 @@ public class Order extends BaseEntity{
     @JsonIgnore
     private Set<OrderItem> items;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User owner;
+
+    @Column(name = "isReview")
+    private boolean isReview;
 
 }

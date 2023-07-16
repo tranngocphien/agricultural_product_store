@@ -19,6 +19,9 @@ public class OrderItem extends BaseEntity{
     @Column(name = "quantity")
     private int quantity;
 
+    @Column(name = "has_review")
+    private boolean hasReview;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false)
     private Order orderInfo;

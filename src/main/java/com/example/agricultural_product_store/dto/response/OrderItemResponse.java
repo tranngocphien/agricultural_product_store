@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 public class OrderItemResponse {
     private Long id;
-
     private ProductResponse product;
     private int quantity;
+    private boolean hasReview;
 }
