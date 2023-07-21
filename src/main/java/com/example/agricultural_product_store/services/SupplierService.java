@@ -30,11 +30,15 @@ public class SupplierService extends BaseService<Supplier, Long> {
 
     public Supplier createSupplier(RegisterSupplierRequest request, User owner) {
         Role roleSupplier = roleRepository.findByName(ERole.ROLE_SUPPLIER);
-        owner.getRoles().add(roleSupplier);
-        userRepository.save(owner);
-
+        boolean isAdmin = owner.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN));
+        if(!isAdmin) {
+            owner.getRoles().add(roleSupplier);
+            userRepository.save(owner);
+        }
         Supplier supplier = new Supplier();
-        supplier.setOwner(owner);
+        if(!isAdmin) {
+            supplier.setOwner(owner);
+        }
         supplier.setName(request.getName());
         supplier.setLocation(request.getLocation());
         supplier.setDescription(request.getDescription());
@@ -55,6 +59,12 @@ public class SupplierService extends BaseService<Supplier, Long> {
         );
     }
 
+    public Supplier getSupplierInfoByUserId(Long id) {
+        return supplierRepository.findByOwner_Id(id).orElseThrow(
+                () -> new ResourceNotFoundException("Error: Supplier is not found.")
+        );
+    }
+
     public Supplier getSupplierInfoById(Long id) {
         return supplierRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Error: Supplier is not found.")
@@ -68,9 +78,6 @@ public class SupplierService extends BaseService<Supplier, Long> {
         Supplier supplier = supplierRepository.findById(request.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Error: Supplier is not found.")
         );
-        if(!supplier.getOwner().getId().equals(user.getId())) {
-            throw new ResourceNotFoundException("Supplier is not registered.");
-        }
         supplier.setName(request.getName());
         supplier.setLocation(request.getLocation());
         supplier.setDescription(request.getDescription());

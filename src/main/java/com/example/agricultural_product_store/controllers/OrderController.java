@@ -3,6 +3,7 @@ package com.example.agricultural_product_store.controllers;
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CommentRequest;
 import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
+import com.example.agricultural_product_store.dto.request.UpdateOrderRequest;
 import com.example.agricultural_product_store.dto.response.CommentResponse;
 import com.example.agricultural_product_store.dto.response.OrderResponse;
 import com.example.agricultural_product_store.dto.response.ResponseData;
@@ -37,6 +38,12 @@ public class OrderController  {
     public ResponseData<OrderResponse> placeOrder(Principal principal, @RequestBody CreateOrderRequest request) {
         User user = userRepository.findByUsername(principal.getName()).get();
         return ResponseData.onSuccess(modelMapper.map(orderService.createOrder(request, user), OrderResponse.class));
+    }
+
+    @PostMapping(value = "/updateStatus")
+    public ResponseData<OrderResponse> updateStatusOrder(Principal principal, @RequestBody UpdateOrderRequest request) {
+        User user = userRepository.findByUsername(principal.getName()).get();
+        return ResponseData.onSuccess(modelMapper.map(orderService.updateStatus(request.getId(), user, request.getStatus()), OrderResponse.class));
     }
 
     @PostMapping(value = "/cancel/{id}")

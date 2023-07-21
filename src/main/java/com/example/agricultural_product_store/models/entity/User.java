@@ -61,6 +61,7 @@ public class User extends BaseEntity {
     @JoinTable(	name = "user_favourite",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JsonIgnore
     private Set<Product> favourite = new HashSet<>();
 
     @OneToMany(mappedBy = "user")

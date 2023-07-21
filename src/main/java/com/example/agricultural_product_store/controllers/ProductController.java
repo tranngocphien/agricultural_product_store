@@ -10,7 +10,7 @@ import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.Comment;
 import com.example.agricultural_product_store.models.entity.Product;
 import com.example.agricultural_product_store.models.entity.User;
-import com.example.agricultural_product_store.services.ProductService;
+import com.example.agricultural_product_store.services.ProductServiceImpl;
 import com.example.agricultural_product_store.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
     private final UserService userService;
     private final ModelMapper modelMapper;
 
-    public ProductController(ProductService productService, ModelMapper modelMapper, UserService userService) {
+    public ProductController(ProductServiceImpl productService, ModelMapper modelMapper, UserService userService) {
         this.productService = productService;
         this.modelMapper = modelMapper;
         this.userService = userService;

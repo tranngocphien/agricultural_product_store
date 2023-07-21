@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/suppliers")
@@ -53,7 +54,9 @@ public class SupplierController {
     }
 
     @GetMapping
-    public ResponseData<List<Supplier>> getAll() {
-        return ResponseData.onSuccess(supplierService.list());
+    public ResponseData<List<SupplierResponse>> getAll() {
+        return ResponseData.onSuccess(supplierService.list().stream().map(
+                supplier -> modelMapper.map(supplier, SupplierResponse.class)
+        ).collect(Collectors.toList()));
     }
 }

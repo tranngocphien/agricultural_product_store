@@ -4,15 +4,18 @@ import com.example.agricultural_product_store.config.exception.BusinessException
 import com.example.agricultural_product_store.config.exception.ResourceNotFoundException;
 import com.example.agricultural_product_store.dto.request.CommentRequest;
 import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
+import com.example.agricultural_product_store.dto.response.PredictSaleResponse;
 import com.example.agricultural_product_store.models.entity.*;
 import com.example.agricultural_product_store.repositories.*;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +25,8 @@ public class OrderService extends BaseService<Order, Long> {
     private PaymentTypeRepository paymentTypeRepository;
     private final ShippingAddressRepository shippingAddressRepository;
     private final CommentRepository commentRepository;
+    @PersistenceContext
+    private EntityManager manager;
 
     private ProductRepository productRepository;
     OrderService(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, CommentRepository commentRepository) {
@@ -57,6 +62,8 @@ public class OrderService extends BaseService<Order, Long> {
             if(product.getStock() < item.getAmount()) {
                 throw new BusinessException("Not enough product in stock");
             }
+            product.setStock(product.getStock() - item.getAmount());
+            productRepository.save(product);
             OrderItem orderItem = new OrderItem();
             orderItem.setQuantity(item.getAmount());
             orderItem.setProduct(product);
@@ -83,7 +90,14 @@ public class OrderService extends BaseService<Order, Long> {
         else {
             throw new BusinessException("Không thể hủy đơn hàng này");
         }
+    }
 
+    public Order updateStatus(Long id, User user, OrderStatus status) {
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Order not found")
+        );
+        order.setStatus(status);
+        return orderRepository.save(order);
     }
 
     public List<Order> getListOrderByUser(Long id) {
@@ -108,6 +122,41 @@ public class OrderService extends BaseService<Order, Long> {
         comment.setCreateTime(new Timestamp(System.currentTimeMillis()));
         comment.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         return commentRepository.save(comment);
+    }
 
+    public List<Map<String, Objects>> getSalesByMonth(Long productId) {
+        return manager.createNativeQuery("SELECT date_format(datefield, '%Y-%m') as date_time, IFNULL(SUM(quantity), 0) as total FROM calendar LEFT JOIN order_item ON date_format(datefield, '%Y-%m-%d') = date_format(create_time, '%Y-%m-%d') AND product_id = :productId WHERE datefield BETWEEN '2023-06-01' AND curdate() GROUP BY date_format(datefield, '%Y-%m')")
+                .setParameter("productId", productId)
+                .getResultList();
+
+    }
+
+    public List<Map<String, Objects>> getDailySales(Long productId) {
+        return manager.createNativeQuery("SELECT datefield as date_time, IFNULL(SUM(quantity), 0) as total FROM calendar LEFT JOIN order_item ON date_format(datefield, '%Y-%m-%d') = date_format(create_time, '%Y-%m-%d') AND product_id = :productId WHERE datefield BETWEEN '2023-06-01' AND curdate() GROUP BY datefield")
+                .setParameter("productId", productId)
+                .getResultList();    }
+
+    public List<PredictSaleResponse> predictSales(Long productId) {
+        List sales = getSalesByMonth(productId);
+
+//        List<Double> saleValue = sales.stream().map(entry -> entry.getTotal()).collect(Collectors.toList());
+        List<Double> saleValue = new ArrayList<>();
+        List<Double> predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 12, 6);
+        List<PredictSaleResponse> result = new ArrayList<>();
+        for (int i = 0; i < sales.size(); i++) {
+//            result.add(new PredictSaleResponse(
+//                    sales.get(i).getKey(),
+//                    sales.get(i).getValue().intValue(),
+//                    predict.get(i)
+//            ));
+        }
+        for(int i = sales.size(); i < predict.size(); i++) {
+            result.add(new PredictSaleResponse(
+                    "2021-" + (i + 1),
+                    0,
+                    predict.get(i)
+            ));
+        }
+        return result;
     }
 }

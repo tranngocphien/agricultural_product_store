@@ -7,6 +7,7 @@ import com.example.agricultural_product_store.dto.request.UpdateProductRequest;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.*;
 import com.example.agricultural_product_store.repositories.*;
+import com.example.agricultural_product_store.services.template.ProductService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,13 +19,13 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-public class ProductService extends BaseService<Product, Long>{
+public class ProductServiceImpl extends BaseService<Product, Long> implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final SupplierRepository supplierRepository;
     private final UserRepository userRepository;
-    public ProductService(ProductRepository repository, CategoryRepository categoryRepository, SupplierRepository supplierRepository, CommentRepository commentRepository, UserRepository userRepository) {
+    public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepository, SupplierRepository supplierRepository, CommentRepository commentRepository, UserRepository userRepository) {
         super(repository);
         this.productRepository = repository;
         this.categoryRepository = categoryRepository;

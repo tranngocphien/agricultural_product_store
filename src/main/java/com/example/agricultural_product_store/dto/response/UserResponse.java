@@ -1,7 +1,9 @@
 package com.example.agricultural_product_store.dto.response;
+import com.example.agricultural_product_store.models.entity.Role;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class UserResponse {
@@ -15,4 +17,5 @@ public class UserResponse {
     private String avatar;
     private int gender;
     private Date dob;
+    private List<Role> roles;
 }

@@ -21,4 +21,5 @@ public class SupplierProductResponse {
     private Set<String> certificateImages;
     private Set<String> images;
     private String preservation;
+    private SupplierResponse supplier;
 }
