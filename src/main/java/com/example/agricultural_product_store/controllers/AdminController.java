@@ -92,7 +92,7 @@ public class AdminController {
     @GetMapping("/monthlySales/{productId}")
     public ResponseData<List<PredictSaleResponse>> getMonthlySales(
             @PathVariable Long productId) {
-        return ResponseData.onSuccess(orderService.predictSales(3L));
+        return ResponseData.onSuccess(orderService.predictSales(productId));
     }
 
 

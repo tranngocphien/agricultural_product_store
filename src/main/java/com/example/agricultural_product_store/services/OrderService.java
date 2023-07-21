@@ -124,17 +124,13 @@ public class OrderService extends BaseService<Order, Long> {
         return commentRepository.save(comment);
     }
 
-    public List<Map<String, Objects>> getSalesByMonth(Long productId) {
-        return manager.createNativeQuery("SELECT date_format(datefield, '%Y-%m') as date_time, IFNULL(SUM(quantity), 0) as total FROM calendar LEFT JOIN order_item ON date_format(datefield, '%Y-%m-%d') = date_format(create_time, '%Y-%m-%d') AND product_id = :productId WHERE datefield BETWEEN '2023-06-01' AND curdate() GROUP BY date_format(datefield, '%Y-%m')")
-                .setParameter("productId", productId)
-                .getResultList();
+    public List<Map<String, Object>> getSalesByMonth(Long productId) {
+        return orderItemRepository.getMonthlySales(productId);
 
     }
 
-    public List<Map<String, Objects>> getDailySales(Long productId) {
-        return manager.createNativeQuery("SELECT datefield as date_time, IFNULL(SUM(quantity), 0) as total FROM calendar LEFT JOIN order_item ON date_format(datefield, '%Y-%m-%d') = date_format(create_time, '%Y-%m-%d') AND product_id = :productId WHERE datefield BETWEEN '2023-06-01' AND curdate() GROUP BY datefield")
-                .setParameter("productId", productId)
-                .getResultList();    }
+    public List<Map<String, Object>> getDailySales(Long productId) {
+        return orderItemRepository.getDailySales(productId);    }
 
     public List<PredictSaleResponse> predictSales(Long productId) {
         List sales = getSalesByMonth(productId);
