@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public interface ProductService {
+public interface ProductService extends BaseService<Product, Long> {
     Product findProductById(Long id);
     List<Product> findProductByCategoryId(Long id);
 

@@ -3,12 +3,15 @@ package com.example.agricultural_product_store.controllers;
 import com.example.agricultural_product_store.dto.response.*;
 import com.example.agricultural_product_store.models.entity.Order;
 import com.example.agricultural_product_store.models.entity.PurchaseOrder;
-import com.example.agricultural_product_store.models.entity.SalesModel;
 import com.example.agricultural_product_store.models.entity.User;
-import com.example.agricultural_product_store.services.OrderService;
-import com.example.agricultural_product_store.services.PurchaseOrderService;
-import com.example.agricultural_product_store.services.SupplierService;
-import com.example.agricultural_product_store.services.UserService;
+import com.example.agricultural_product_store.services.OrderServiceImpl;
+import com.example.agricultural_product_store.services.PurchaseOrderServiceImpl;
+import com.example.agricultural_product_store.services.SupplierServiceImpl;
+import com.example.agricultural_product_store.services.UserServiceImpl;
+import com.example.agricultural_product_store.services.template.OrderService;
+import com.example.agricultural_product_store.services.template.PurchaseOrderService;
+import com.example.agricultural_product_store.services.template.SupplierService;
+import com.example.agricultural_product_store.services.template.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -92,7 +95,7 @@ public class AdminController {
     @GetMapping("/monthlySales/{productId}")
     public ResponseData<List<PredictSaleResponse>> getMonthlySales(
             @PathVariable Long productId) {
-        return ResponseData.onSuccess(orderService.predictSales(productId));
+        return ResponseData.onSuccess(orderService.predictMonthlySales(productId));
     }
 
 

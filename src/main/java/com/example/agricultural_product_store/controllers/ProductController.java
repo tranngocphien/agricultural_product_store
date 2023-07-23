@@ -11,7 +11,8 @@ import com.example.agricultural_product_store.models.entity.Comment;
 import com.example.agricultural_product_store.models.entity.Product;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.services.ProductServiceImpl;
-import com.example.agricultural_product_store.services.UserService;
+import com.example.agricultural_product_store.services.UserServiceImpl;
+import com.example.agricultural_product_store.services.template.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -67,6 +68,15 @@ public class ProductController {
     @GetMapping("/filter")
     public ResponseData<List<ProductResponse>> getListProductsByCategoryId(@RequestParam(name = "categoryId") Long id) {
         List<Product> products = productService.findProductByCategoryId(id);
+        List<ProductResponse> responses = products.stream().map(
+                product -> modelMapper.map(product, ProductResponse.class)
+        ).collect(Collectors.toList());
+        return ResponseData.onSuccess(responses);
+    }
+
+    @GetMapping("/bestSeller")
+    public ResponseData<List<ProductResponse>> getBestSeller() {
+        List<Product> products = productService.bestSellerProduct();
         List<ProductResponse> responses = products.stream().map(
                 product -> modelMapper.map(product, ProductResponse.class)
         ).collect(Collectors.toList());

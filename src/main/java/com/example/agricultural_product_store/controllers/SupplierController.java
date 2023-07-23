@@ -4,10 +4,10 @@ import com.example.agricultural_product_store.dto.request.RegisterSupplierReques
 import com.example.agricultural_product_store.dto.request.UpdateSupplierRequest;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.dto.response.SupplierResponse;
-import com.example.agricultural_product_store.models.entity.Supplier;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.UserRepository;
-import com.example.agricultural_product_store.services.SupplierService;
+import com.example.agricultural_product_store.services.SupplierServiceImpl;
+import com.example.agricultural_product_store.services.template.SupplierService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

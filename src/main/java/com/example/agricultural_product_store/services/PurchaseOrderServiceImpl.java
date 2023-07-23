@@ -10,8 +10,7 @@ import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.PurchaseOrderRepository;
 import com.example.agricultural_product_store.repositories.SupplierProductRepository;
 import com.example.agricultural_product_store.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.agricultural_product_store.services.template.PurchaseOrderService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +18,12 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Service
-public class PurchaseOrderService extends BaseService<PurchaseOrder, Long> {
+public class PurchaseOrderServiceImpl extends BaseService<PurchaseOrder, Long> implements PurchaseOrderService {
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final SupplierProductRepository supplierProductRepository;
     private final UserRepository userRepository;
 
-    PurchaseOrderService(PurchaseOrderRepository repository, SupplierProductRepository supplierProductRepository, UserRepository userRepository) {
+    PurchaseOrderServiceImpl(PurchaseOrderRepository repository, SupplierProductRepository supplierProductRepository, UserRepository userRepository) {
         super(repository);
         this.purchaseOrderRepository = repository;
         this.supplierProductRepository = supplierProductRepository;

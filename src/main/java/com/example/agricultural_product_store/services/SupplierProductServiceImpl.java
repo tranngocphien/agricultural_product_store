@@ -9,6 +9,7 @@ import com.example.agricultural_product_store.models.entity.SupplierProduct;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.CategoryRepository;
 import com.example.agricultural_product_store.repositories.SupplierProductRepository;
+import com.example.agricultural_product_store.services.template.SupplierProductService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -18,11 +19,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class SupplierProductService extends BaseService<SupplierProduct, Long> {
+public class SupplierProductServiceImpl extends BaseService<SupplierProduct, Long> implements SupplierProductService {
     private SupplierProductRepository supplierProductRepository;
     private CategoryRepository categoryRepository;
 
-    SupplierProductService(SupplierProductRepository repository, CategoryRepository categoryRepository) {
+    SupplierProductServiceImpl(SupplierProductRepository repository, CategoryRepository categoryRepository) {
         super(repository);
         this.supplierProductRepository = repository;
         this.categoryRepository = categoryRepository;

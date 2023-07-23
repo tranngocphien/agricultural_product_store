@@ -5,13 +5,14 @@ import com.example.agricultural_product_store.dto.request.CreateCategoryRequest;
 import com.example.agricultural_product_store.dto.request.UpdateCategoryRequest;
 import com.example.agricultural_product_store.models.entity.Category;
 import com.example.agricultural_product_store.repositories.CategoryRepository;
+import com.example.agricultural_product_store.services.template.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
 @Service
-public class CategoryService extends BaseService<Category, Long>{
-    CategoryService(CategoryRepository repository) {
+public class CategoryServiceImpl extends BaseService<Category, Long> implements CategoryService {
+    CategoryServiceImpl(CategoryRepository repository) {
         super(repository);
     }
     public Category save(CreateCategoryRequest request) {

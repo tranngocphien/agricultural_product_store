@@ -5,8 +5,7 @@ import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.Notification;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.services.NotificationService;
-import com.example.agricultural_product_store.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.agricultural_product_store.services.UserServiceImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +19,9 @@ import java.util.List;
 public class NotificationController {
 
     private final NotificationService notificationService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public NotificationController(NotificationService service, UserService userService) {
+    public NotificationController(NotificationService service, UserServiceImpl userService) {
         this.notificationService = service;
         this.userService = userService;
     }

@@ -5,9 +5,9 @@ import com.example.agricultural_product_store.dto.request.UpdateCategoryRequest;
 import com.example.agricultural_product_store.dto.response.CategoryResponse;
 import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.Category;
-import com.example.agricultural_product_store.services.CategoryService;
+import com.example.agricultural_product_store.services.CategoryServiceImpl;
+import com.example.agricultural_product_store.services.template.CategoryService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

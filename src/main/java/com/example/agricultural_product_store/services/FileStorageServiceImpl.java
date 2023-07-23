@@ -1,4 +1,5 @@
 package com.example.agricultural_product_store.services;
+import com.example.agricultural_product_store.services.template.FileStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,10 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class FileStorageService {
+public class FileStorageServiceImpl implements FileStorageService {
     private final Path fileStorageLocation;
 
-    public FileStorageService() {
+    public FileStorageServiceImpl() {
         this.fileStorageLocation = Paths.get("uploads");
     }
 

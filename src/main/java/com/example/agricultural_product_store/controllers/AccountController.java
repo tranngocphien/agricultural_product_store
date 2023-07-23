@@ -7,7 +7,8 @@ import com.example.agricultural_product_store.dto.response.ShippingAddressRespon
 import com.example.agricultural_product_store.dto.response.UserResponse;
 import com.example.agricultural_product_store.models.entity.ShippingAddress;
 import com.example.agricultural_product_store.models.entity.User;
-import com.example.agricultural_product_store.services.UserService;
+import com.example.agricultural_product_store.services.UserServiceImpl;
+import com.example.agricultural_product_store.services.template.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

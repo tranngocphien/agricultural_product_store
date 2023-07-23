@@ -10,9 +10,9 @@ import com.example.agricultural_product_store.dto.response.ResponseData;
 import com.example.agricultural_product_store.models.entity.Order;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.UserRepository;
-import com.example.agricultural_product_store.services.OrderService;
+import com.example.agricultural_product_store.services.OrderServiceImpl;
+import com.example.agricultural_product_store.services.template.OrderService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class OrderController  {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public OrderController(OrderService orderService, UserRepository userRepository,ModelMapper modelMapper) {
+    public OrderController(OrderService orderService, UserRepository userRepository, ModelMapper modelMapper) {
         this.orderService = orderService;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;

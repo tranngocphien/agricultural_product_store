@@ -7,19 +7,19 @@ import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
 import com.example.agricultural_product_store.dto.response.PredictSaleResponse;
 import com.example.agricultural_product_store.models.entity.*;
 import com.example.agricultural_product_store.repositories.*;
+import com.example.agricultural_product_store.services.exponential_smoothing.TripleExponentialSmoothing;
+import com.example.agricultural_product_store.services.template.OrderService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderService extends BaseService<Order, Long> {
+public class OrderServiceImpl extends BaseService<Order, Long> implements OrderService {
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private PaymentTypeRepository paymentTypeRepository;
@@ -29,7 +29,7 @@ public class OrderService extends BaseService<Order, Long> {
     private EntityManager manager;
 
     private ProductRepository productRepository;
-    OrderService(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, CommentRepository commentRepository) {
+    OrderServiceImpl(OrderRepository repository, OrderItemRepository orderItemRepository, PaymentTypeRepository paymentTypeRepository, ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, CommentRepository commentRepository) {
         super(repository);
         this.orderRepository = repository;
         this.orderItemRepository = orderItemRepository;
@@ -132,19 +132,18 @@ public class OrderService extends BaseService<Order, Long> {
     public List<Map<String, Object>> getDailySales(Long productId) {
         return orderItemRepository.getDailySales(productId);    }
 
-    public List<PredictSaleResponse> predictSales(Long productId) {
-        List sales = getSalesByMonth(productId);
-
-//        List<Double> saleValue = sales.stream().map(entry -> entry.getTotal()).collect(Collectors.toList());
+    public List<PredictSaleResponse> predictMonthlySales(Long productId) {
+        List<Map<String, Object>> sales = getSalesByMonth(productId);
         List<Double> saleValue = new ArrayList<>();
-        List<Double> predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 12, 6);
+        sales.forEach(sale -> saleValue.add(Double.parseDouble(sale.get("total").toString())));
+        List<Double> predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 6, 6);
         List<PredictSaleResponse> result = new ArrayList<>();
         for (int i = 0; i < sales.size(); i++) {
-//            result.add(new PredictSaleResponse(
-//                    sales.get(i).getKey(),
-//                    sales.get(i).getValue().intValue(),
-//                    predict.get(i)
-//            ));
+            result.add(new PredictSaleResponse(
+                    sales.get(i).get("dayStr").toString(),
+                    Double.parseDouble(sales.get(i).get("total").toString()),
+                    predict.get(i)
+            ));
         }
         for(int i = sales.size(); i < predict.size(); i++) {
             result.add(new PredictSaleResponse(

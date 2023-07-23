@@ -1,7 +1,7 @@
 package com.example.agricultural_product_store.controllers;
 
 import com.example.agricultural_product_store.dto.response.ResponseData;
-import com.example.agricultural_product_store.services.FileStorageService;
+import com.example.agricultural_product_store.services.FileStorageServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/images")
 public class ImageController {
-    private final FileStorageService fileStorageService;
+    private final FileStorageServiceImpl fileStorageService;
 
-    public ImageController(FileStorageService fileStorageService) {
+    public ImageController(FileStorageServiceImpl fileStorageService) {
         this.fileStorageService = fileStorageService;
     }
 

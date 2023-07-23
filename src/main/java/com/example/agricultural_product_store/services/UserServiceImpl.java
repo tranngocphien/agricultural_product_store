@@ -7,12 +7,11 @@ import com.example.agricultural_product_store.models.entity.ShippingAddress;
 import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.ShippingAddressRepository;
 import com.example.agricultural_product_store.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.agricultural_product_store.services.template.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,13 +20,13 @@ import java.util.Optional;
 import static com.example.agricultural_product_store.config.Constants.USER_PASSWORD_NOT_MATCH;
 
 @Service
-public class UserService extends BaseService<User, Long>{
+public class UserServiceImpl extends BaseService<User, Long> implements UserService {
 
     private final UserRepository userRepository;
     private final ShippingAddressRepository shippingAddressRepository;
 
     private final PasswordEncoder passwordEncoder;
-    UserService(UserRepository repository, PasswordEncoder passwordEncoder, ShippingAddressRepository shippingAddressRepository) {
+    UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder, ShippingAddressRepository shippingAddressRepository) {
         super(repository);
         this.userRepository = repository;
         this.passwordEncoder = passwordEncoder;

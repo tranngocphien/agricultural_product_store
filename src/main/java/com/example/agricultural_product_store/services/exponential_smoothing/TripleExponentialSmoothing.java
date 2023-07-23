@@ -1,4 +1,4 @@
-package com.example.agricultural_product_store.services;
+package com.example.agricultural_product_store.services.exponential_smoothing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,7 @@ public class TripleExponentialSmoothing {
 
             // Calculate overall smoothing
             if ((i - period) >= 0) {
-                St.set(i, alpha * y.get(i) / It.get(i - period) + (1.0 - alpha)
+                St.set(i, alpha * (y.get(i) - It.get(i - period)) + (1.0 - alpha)
                         * (St.get(i - 1) + Bt.get(i - 1)));
             } else {
                 St.set(i, alpha * y.get(i) + (1.0 - alpha) * (St.get(i - 1) + Bt.get(i - 1)));
@@ -107,7 +107,7 @@ public class TripleExponentialSmoothing {
 
             // Calculate seasonal smoothing
             if ((i - period) >= 0) {
-                It.set(i, beta * y.get(i) / St.get(i) + (1.0 - beta) * It.get(i - period));
+                It.set(i, beta * (y.get(i) - St.get(i)) + (1.0 - beta) * It.get(i - period));
             }
 
             // Calculate forecast
@@ -126,6 +126,9 @@ public class TripleExponentialSmoothing {
     private static double calculateInitialTrend(List<Double> y, int period) {
 
         double sum = 0;
+        if(y.size() < period) {
+            return 0;
+        }
 
         for (int i = 0; i < period; i++) {
             sum += (y.get(period + i) - y.get(i));

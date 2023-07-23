@@ -123,4 +123,7 @@ public class ProductServiceImpl extends BaseService<Product, Long> implements Pr
     public List<Product> searchProduct(String keyword) {
         return productRepository.findAllByNameContains(keyword);
     }
+    public List<Product> bestSellerProduct() {
+        return productRepository.bestSeller();
+    }
 }

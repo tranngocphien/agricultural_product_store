@@ -10,6 +10,7 @@ import com.example.agricultural_product_store.models.entity.User;
 import com.example.agricultural_product_store.repositories.RoleRepository;
 import com.example.agricultural_product_store.repositories.SupplierRepository;
 import com.example.agricultural_product_store.repositories.UserRepository;
+import com.example.agricultural_product_store.services.template.SupplierService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,11 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Service
-public class SupplierService extends BaseService<Supplier, Long> {
+public class SupplierServiceImpl extends BaseService<Supplier, Long> implements SupplierService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final SupplierRepository supplierRepository;
-    SupplierService(SupplierRepository repository, RoleRepository roleRepository, UserRepository userRepository) {
+    SupplierServiceImpl(SupplierRepository repository, RoleRepository roleRepository, UserRepository userRepository) {
         super(repository);
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;

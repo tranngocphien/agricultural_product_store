@@ -4,7 +4,8 @@ import com.example.agricultural_product_store.dto.request.CreatePurchaseOrderReq
 import com.example.agricultural_product_store.dto.request.UpdatePurchaseOrderRequest;
 import com.example.agricultural_product_store.dto.response.PurchaseOrderResponse;
 import com.example.agricultural_product_store.dto.response.ResponseData;
-import com.example.agricultural_product_store.services.PurchaseOrderService;
+import com.example.agricultural_product_store.services.PurchaseOrderServiceImpl;
+import com.example.agricultural_product_store.services.template.PurchaseOrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
