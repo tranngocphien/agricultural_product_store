@@ -10,5 +10,4 @@ public class RegisterSupplierRequest {
     private String location;
     private String description;
     private String brandImage;
-    private String idNumber;
 }

@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class AdminController {
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size,  Sort.by("createTime").descending());
         Page<Order> orderPage = orderService.listPage(pageable);
         List<OrderResponse> orders = orderPage.getContent().stream().map(order -> {
             return modelMapper.map(order, OrderResponse.class);
@@ -79,7 +80,7 @@ public class AdminController {
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createTime").descending());
         Page<PurchaseOrder> orderPage = purchaseOrderService.listPage(pageable);
         List<PurchaseOrderResponse> orders = orderPage.getContent().stream().map(order -> {
             return modelMapper.map(order, PurchaseOrderResponse.class);
@@ -96,6 +97,12 @@ public class AdminController {
     public ResponseData<List<PredictSaleResponse>> getMonthlySales(
             @PathVariable Long productId) {
         return ResponseData.onSuccess(orderService.predictMonthlySales(productId));
+    }
+
+    @GetMapping("/dailySales/{productId}")
+    public ResponseData<List<PredictSaleResponse>> getDailySales(
+            @PathVariable Long productId) {
+        return ResponseData.onSuccess(orderService.predictDailySales(productId));
     }
 
 

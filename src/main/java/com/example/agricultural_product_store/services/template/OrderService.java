@@ -23,4 +23,7 @@ public interface OrderService extends BaseService<Order, Long> {
     public List<Map<String, Object>> getDailySales(Long productId);
 
     public List<PredictSaleResponse> predictMonthlySales(Long productId) ;
+
+    public List<PredictSaleResponse> predictDailySales(Long productId) ;
+
 }

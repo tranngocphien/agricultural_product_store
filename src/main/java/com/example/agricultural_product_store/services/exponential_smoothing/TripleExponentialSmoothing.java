@@ -66,24 +66,24 @@ public class TripleExponentialSmoothing {
 
 
         List<Double> MD = new ArrayList<Double>(y.size() + m);
-        while (MD.size() < y.size() + m) MD.add(0.0);
+        while (MD.size() < y.size()) MD.add(0.0);
 
 
         List<Double> MAD = new ArrayList<Double>(y.size() + m);
-        while (MAD.size() < y.size() + m) MAD.add(0.0);
+        while (MAD.size() < y.size()) MAD.add(0.0);
 
         // Initialize base values
-        St.add(1, a0);
-        Bt.add(1, b0);
-        MD.add(1, 0.0);
-        MAD.add(1, 0.0);
+        St.add(0, a0);
+        Bt.add(0, b0);
+        MD.add(0, 0.0);
+        MAD.add(0, 0.0);
 
         for (int i = 0; i < period; i++) {
             It.set(i, initialSeasonalIndices.get(i));
         }
 
         // Start calculations
-        for (int i = 2; i < y.size(); i++) {
+        for (int i = 1; i < y.size(); i++) {
             // Adaptive update alpha
             double error = y.get(i) - St.get(i - 1) - Bt.get(i - 1) - It.get(i%period);
             MD.set(i, phi*error + (1-phi)*MD.get(i-1));
@@ -96,7 +96,7 @@ public class TripleExponentialSmoothing {
 
             // Calculate overall smoothing
             if ((i - period) >= 0) {
-                St.set(i, alpha * (y.get(i) - It.get(i - period)) + (1.0 - alpha)
+                St.set(i, alpha * (y.get(i)/It.get(i - period)) + (1.0 - alpha)
                         * (St.get(i - 1) + Bt.get(i - 1)));
             } else {
                 St.set(i, alpha * y.get(i) + (1.0 - alpha) * (St.get(i - 1) + Bt.get(i - 1)));
@@ -107,13 +107,14 @@ public class TripleExponentialSmoothing {
 
             // Calculate seasonal smoothing
             if ((i - period) >= 0) {
-                It.set(i, beta * (y.get(i) - St.get(i)) + (1.0 - beta) * It.get(i - period));
+                It.set(i, beta * (y.get(i)/ St.get(i)) + (1.0 - beta) * It.get(i - period));
             }
-
+            Ft.set(i + 1, (St.get(i - 1) + Bt.get(i - 1)) * It.get(i - period));
             // Calculate forecast
-            if (((i + m) >= period)) {
-                Ft.set(i + m, (St.get(i) + m * Bt.get(i)) * It.get(i - period + m));
-            }
+        }
+
+        for(int i = 0; i < m; i++) {
+            Ft.set(y.size() + i, (St.get(y.size() - 1) + (i+1)*Bt.get(y.size() - 1)) * It.get(y.size() - period + i));
         }
 
         return Ft;

@@ -7,8 +7,11 @@ import com.example.agricultural_product_store.dto.request.CreateOrderRequest;
 import com.example.agricultural_product_store.dto.response.PredictSaleResponse;
 import com.example.agricultural_product_store.models.entity.*;
 import com.example.agricultural_product_store.repositories.*;
+import com.example.agricultural_product_store.services.exponential_smoothing.DoubleExponentialSmoothing;
 import com.example.agricultural_product_store.services.exponential_smoothing.TripleExponentialSmoothing;
 import com.example.agricultural_product_store.services.template.OrderService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -135,23 +138,83 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
     public List<PredictSaleResponse> predictMonthlySales(Long productId) {
         List<Map<String, Object>> sales = getSalesByMonth(productId);
         List<Double> saleValue = new ArrayList<>();
-        sales.forEach(sale -> saleValue.add(Double.parseDouble(sale.get("total").toString())));
-        List<Double> predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 6, 6);
+        List<Map<String, Object>> removedSales = new ArrayList<>();
+
+        boolean canRemove = true;
+        for(int i = 0; i < sales.size(); i++) {
+            if(Double.parseDouble(sales.get(i).get("total").toString()) != 0) {
+                canRemove = false;
+            }
+            if(!canRemove) {
+                removedSales.add(sales.get(i));
+            }
+        }
+
+        removedSales.forEach(sale -> saleValue.add(Double.parseDouble(sale.get("total").toString())));
+        List<String> days = removedSales.stream().map(sale -> sale.get("dayStr").toString()).collect(Collectors.toList());
+
+        List<Double> predict = new ArrayList<>();
+        if(saleValue.size() < 12*2) {
+            predict = DoubleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 3);
+        }
+        else {
+            predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 12, 3);
+        }
         List<PredictSaleResponse> result = new ArrayList<>();
-        for (int i = 0; i < sales.size(); i++) {
+        for (int i = 0; i < removedSales.size(); i++) {
             result.add(new PredictSaleResponse(
-                    sales.get(i).get("dayStr").toString(),
-                    Double.parseDouble(sales.get(i).get("total").toString()),
-                    predict.get(i)
+                    days.get(i),
+                    Double.parseDouble(removedSales.get(i).get("total").toString())
             ));
         }
-        for(int i = sales.size(); i < predict.size(); i++) {
+        for(int i = 0; i < 3; i++) {
             result.add(new PredictSaleResponse(
-                    "2021-" + (i + 1),
-                    0,
-                    predict.get(i)
+                    "next month",
+                    predict.get(removedSales.size() + i)
             ));
         }
         return result;
     }
+
+    public List<PredictSaleResponse> predictDailySales(Long productId) {
+        List<Map<String, Object>> sales = getDailySales(productId);
+        List<Double> saleValue = new ArrayList<>();
+        List<Map<String, Object>> removedSales = new ArrayList<>();
+
+        boolean canRemove = true;
+        for(int i = 0; i < sales.size(); i++) {
+            if(Double.parseDouble(sales.get(i).get("total").toString()) != 0) {
+                canRemove = false;
+            }
+            if(!canRemove) {
+                removedSales.add(sales.get(i));
+            }
+        }
+
+        removedSales.forEach(sale -> saleValue.add(Double.parseDouble(sale.get("total").toString())));
+        List<String> days = removedSales.stream().map(sale -> sale.get("dayStr").toString()).collect(Collectors.toList());
+
+        List<Double> predict = new ArrayList<>();
+        if(saleValue.size() < 365*2) {
+            predict = DoubleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 7);
+        }
+        else {
+            predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 365, 7);
+        }
+        List<PredictSaleResponse> result = new ArrayList<>();
+        for (int i = 0; i < removedSales.size(); i++) {
+            result.add(new PredictSaleResponse(
+                    days.get(i),
+                    Double.parseDouble(removedSales.get(i).get("total").toString())
+            ));
+        }
+        for(int i = 0; i < 7; i++) {
+            result.add(new PredictSaleResponse(
+                    "next day",
+                    predict.get(removedSales.size() + i)
+            ));
+        }
+        return result;
+    }
+
 }

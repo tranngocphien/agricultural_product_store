@@ -9,6 +9,5 @@ import java.sql.Date;
 @AllArgsConstructor
 public class PredictSaleResponse {
     private String date;
-    private double total;
-    private double predict;
+    private double value;
 }
