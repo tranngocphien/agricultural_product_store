@@ -26,7 +26,7 @@ public class ImageController {
         List<String> result = new ArrayList<>();
         Arrays.stream(files).map(file -> {
             try {
-                result.add(fileStorageService.save(file));
+                result.add(fileStorageService.upload(file));
             } catch (Exception e) {
                 e.printStackTrace();
             }
