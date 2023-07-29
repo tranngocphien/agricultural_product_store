@@ -164,12 +164,12 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
         for (int i = 0; i < removedSales.size(); i++) {
             result.add(new PredictSaleResponse(
                     days.get(i),
-                    Double.parseDouble(removedSales.get(i).get("total").toString())
+                    Double.parseDouble(removedSales.get(i).get("total").toString()) < 0 ? 0 : Double.parseDouble(removedSales.get(i).get("total").toString())
             ));
         }
         for(int i = 0; i < 3; i++) {
             result.add(new PredictSaleResponse(
-                    "next month",
+                    (i + 1) + " tháng sau",
                     predict.get(removedSales.size() + i)
             ));
         }
@@ -205,12 +205,12 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
         for (int i = 0; i < removedSales.size(); i++) {
             result.add(new PredictSaleResponse(
                     days.get(i),
-                    Double.parseDouble(removedSales.get(i).get("total").toString())
+                    Double.parseDouble(removedSales.get(i).get("total").toString()) < 0 ? 0 : Double.parseDouble(removedSales.get(i).get("total").toString())
             ));
         }
         for(int i = 0; i < 7; i++) {
             result.add(new PredictSaleResponse(
-                    "next day",
+                    (i + 1) + " ngày sau",
                     predict.get(removedSales.size() + i)
             ));
         }

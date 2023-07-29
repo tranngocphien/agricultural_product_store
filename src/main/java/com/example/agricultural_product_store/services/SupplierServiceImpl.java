@@ -44,7 +44,6 @@ public class SupplierServiceImpl extends BaseService<Supplier, Long> implements 
         supplier.setLocation(request.getLocation());
         supplier.setDescription(request.getDescription());
         supplier.setBrandImage(request.getBrandImage());
-        supplier.setIdNumber(request.getIdNumber());
         supplier.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
         supplier.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         return repository.save(supplier);

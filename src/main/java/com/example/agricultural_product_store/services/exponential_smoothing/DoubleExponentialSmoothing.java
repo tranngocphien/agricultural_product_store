@@ -63,14 +63,6 @@ public class DoubleExponentialSmoothing {
 
         // Start calculations
         for (int i = 1; i < y.size(); i++) {
-            // Adaptive update alpha
-            double error = y.get(i) - St.get(i - 1) - Bt.get(i - 1);
-            MD.set(i, phi*error + (1-phi)*MD.get(i-1));
-            MAD.set(i, phi*Math.abs(error) + (1-phi)*MAD.get(i-1));
-            if(MAD.get(i) == 0) {
-            } else {
-                alpha = Math.abs(MD.get(i)/MAD.get(i));
-            }
             // Calculate overall smoothing
             St.set(i, alpha * y.get(i) + (1.0 - alpha) * (St.get(i - 1) + Bt.get(i - 1)));
             // Calculate trend smoothing
