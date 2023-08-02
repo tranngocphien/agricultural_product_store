@@ -155,10 +155,10 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
 
         List<Double> predict = new ArrayList<>();
         if(saleValue.size() < 12*2) {
-            predict = DoubleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 3);
+            predict = DoubleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 6);
         }
         else {
-            predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.1, 0.1, 12, 3);
+            predict = TripleExponentialSmoothing.forecast(saleValue, 0.1, 0.05, 0.05, 12, 6);
         }
         List<PredictSaleResponse> result = new ArrayList<>();
         for (int i = 0; i < removedSales.size(); i++) {
@@ -167,7 +167,7 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
                     Double.parseDouble(removedSales.get(i).get("total").toString()) < 0 ? 0 : Double.parseDouble(removedSales.get(i).get("total").toString())
             ));
         }
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 6; i++) {
             result.add(new PredictSaleResponse(
                     (i + 1) + " tháng sau",
                     predict.get(removedSales.size() + i)

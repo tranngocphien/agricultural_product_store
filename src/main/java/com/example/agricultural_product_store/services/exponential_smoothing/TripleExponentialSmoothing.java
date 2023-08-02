@@ -99,13 +99,31 @@ public class TripleExponentialSmoothing {
             if ((i - period) >= 0) {
                 It.set(i, beta * (y.get(i)/ St.get(i)) + (1.0 - beta) * It.get(i - period));
             }
-            Ft.set(i + 1, (St.get(i - 1) + Bt.get(i - 1)) * It.get(i - period));
+
+            if((i - period) >= 0) {
+                Ft.set(i + 1, (St.get(i - 1) + Bt.get(i - 1)) * It.get(i - period));
+            }
+            else {
+                Ft.set(i + 1, St.get(i - 1) + Bt.get(i - 1) *It.get(i));
+            }
             // Calculate forecast
         }
 
         for(int i = 0; i < m; i++) {
             Ft.set(y.size() + i, (St.get(y.size() - 1) + (i+1)*Bt.get(y.size() - 1)) * It.get(y.size() - period + i));
         }
+
+        double sse = 0;
+
+        // Calculate SSE
+        for(int i = 0; i < y.size(); i++) {
+            sse += (y.get(i) - Ft.get(i)) * (y.get(i) - Ft.get(i));
+        }
+
+        double mse = (sse / (y.size()));
+
+        System.out.println("SSE: " + sse);
+        System.out.println("MSE: " + mse);
 
         return Ft;
     }
