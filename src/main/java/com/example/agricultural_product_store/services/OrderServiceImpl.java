@@ -151,6 +151,11 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
         }
 
         removedSales.forEach(sale -> saleValue.add(Double.parseDouble(sale.get("total").toString())));
+        for(int i = 0; i < saleValue.size(); i++) {
+            if(saleValue.get(i) == 0) {
+                saleValue.set(i, saleValue.get(i-1));
+            }
+        }
         List<String> days = removedSales.stream().map(sale -> sale.get("dayStr").toString()).collect(Collectors.toList());
 
         List<Double> predict = new ArrayList<>();
@@ -170,7 +175,7 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
         for(int i = 0; i < 6; i++) {
             result.add(new PredictSaleResponse(
                     (i + 1) + " tháng sau",
-                    predict.get(removedSales.size() + i)
+                    predict.get(removedSales.size() + i) < 0 ? 0 : predict.get(removedSales.size() + i)
             ));
         }
         return result;
@@ -193,6 +198,11 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
 
         removedSales.forEach(sale -> saleValue.add(Double.parseDouble(sale.get("total").toString())));
         List<String> days = removedSales.stream().map(sale -> sale.get("dayStr").toString()).collect(Collectors.toList());
+        for (int i = 0; i < saleValue.size(); i++) {
+            if(saleValue.get(i) == 0) {
+                saleValue.set(i, saleValue.get(i-1));
+            }
+        }
 
         List<Double> predict = new ArrayList<>();
         if(saleValue.size() < 365*2) {
@@ -211,7 +221,7 @@ public class OrderServiceImpl extends BaseService<Order, Long> implements OrderS
         for(int i = 0; i < 7; i++) {
             result.add(new PredictSaleResponse(
                     (i + 1) + " ngày sau",
-                    predict.get(removedSales.size() + i)
+                    predict.get(removedSales.size() + i) > 0 ? predict.get(removedSales.size() + i) : 0
             ));
         }
         return result;
