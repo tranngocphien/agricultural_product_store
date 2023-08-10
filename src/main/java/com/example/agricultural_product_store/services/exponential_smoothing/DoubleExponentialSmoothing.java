@@ -7,33 +7,12 @@ import java.util.List;
 public class DoubleExponentialSmoothing {
     public static List<Double> forecast(List<Double> y, double alpha,
                                         double gamma, int m) {
-        validateArguments(y, alpha, gamma, m);
-
         double a0 = calculateInitialLevel(y);
         double b0 = calculateInitialTrend(y);
 
         List<Double> forecast = calculateHolt(y, a0, b0, alpha, gamma, 0.1, m);
 
         return forecast;
-    }
-
-    private static void validateArguments(List<Double> y, double alpha,
-                                          double gamma, int m) {
-        if (y == null) {
-            throw new IllegalArgumentException("Value of y should be not null");
-        }
-
-        if (m <= 0) {
-            throw new IllegalArgumentException("Value of m must be greater than 0.");
-        }
-
-        if ((alpha < 0.0) || (alpha > 1.0)) {
-            throw new IllegalArgumentException("Value of Alpha should satisfy 0.0 <= alpha <= 1.0");
-        }
-
-        if ((gamma < 0.0) || (gamma > 1.0)) {
-            throw new IllegalArgumentException("Value of Gamma should satisfy 0.0 <= gamma <= 1.0");
-        }
     }
 
     private static List<Double> calculateHolt(List<Double> y, double a0, double b0,
@@ -61,7 +40,6 @@ public class DoubleExponentialSmoothing {
         MAD.add(0, 0.0);
         Ft.set(1, a0);
 
-        // Start calculations
         for (int i = 1; i < y.size(); i++) {
             // Calculate overall smoothing
             St.set(i, alpha * y.get(i) + (1.0 - alpha) * (St.get(i - 1) + Bt.get(i - 1)));

@@ -7,8 +7,6 @@ public class TripleExponentialSmoothing {
     public static List<Double> forecast(List<Double> y, double alpha, double beta,
                                         double gamma, int period, int m) {
 
-        validateArguments(y, alpha, beta, gamma, period, m);
-
         int seasons = y.size() / period;
         double a0 = calculateInitialLevel(y);
         double b0 = calculateInitialTrend(y, period);
@@ -19,33 +17,6 @@ public class TripleExponentialSmoothing {
                 initialSeasonalIndices, period, m);
 
         return forecast;
-    }
-
-    private static void validateArguments(List<Double> y, double alpha, double beta,
-                                          double gamma, int period, int m) {
-        if (y == null) {
-            throw new IllegalArgumentException("Value of y should be not null");
-        }
-
-        if (m <= 0) {
-            throw new IllegalArgumentException("Value of m must be greater than 0.");
-        }
-
-        if (m > period) {
-            throw new IllegalArgumentException("Value of m must be <= period.");
-        }
-
-        if ((alpha < 0.0) || (alpha > 1.0)) {
-            throw new IllegalArgumentException("Value of Alpha should satisfy 0.0 <= alpha <= 1.0");
-        }
-
-        if ((beta < 0.0) || (beta > 1.0)) {
-            throw new IllegalArgumentException("Value of Beta should satisfy 0.0 <= beta <= 1.0");
-        }
-
-        if ((gamma < 0.0) || (gamma > 1.0)) {
-            throw new IllegalArgumentException("Value of Gamma should satisfy 0.0 <= gamma <= 1.0");
-        }
     }
 
     private static List<Double> calculateHoltWinters(List<Double> y, double a0, double b0,
@@ -82,7 +53,6 @@ public class TripleExponentialSmoothing {
             It.set(i, initialSeasonalIndices.get(i));
         }
 
-        // Start calculations
         for (int i = 1; i < y.size(); i++) {
             // Calculate overall smoothing
             if ((i - period) >= 0) {
@@ -106,7 +76,6 @@ public class TripleExponentialSmoothing {
             else {
                 Ft.set(i + 1, St.get(i - 1) + Bt.get(i - 1) *It.get(i));
             }
-            // Calculate forecast
         }
 
         for(int i = 0; i < m; i++) {

@@ -87,6 +87,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEmail(registerRequest.getEmail());
         user.setRoles(roles);
+        user.setAvatar("https://res.cloudinary.com/litchitech/image/upload/v1691669193/agri_shop/ciin3nfv5jouffc7cubx.png");
         user.setCreateTime(Timestamp.valueOf(LocalDateTime.now()));
         user.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
         userRepository.save(user);
